@@ -1,0 +1,90 @@
+{ 
+  "title": "Termin",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Veranstaltungsname",
+      "minLength": 3
+    },
+    "Kategorie": {
+      "type": "string",
+      "enum": [
+        "disco / party",
+        "kultur/theater",       
+        "kultur/fuehrung",      
+        "kultur/sonstige",      
+        "konzert/klassische musik",
+        "konzert/rockmusik",
+        "konzert/pop",
+        "konzert/sonstige",
+        "kinder",
+        "familie",
+        "jugendliche",       
+        "flohmarkt",    
+        "trödelmarkt",    
+        "kinderflohmarkt"
+      ]
+    },
+
+    "startDate": {
+      "type": "string",
+      "title": "Startdatum",
+      "format": "date"
+    },
+
+    "endDate": {
+      "type": "string",
+      "title": "Enddatum",
+      "format": "date"
+    },
+
+    "startTime": {
+      "type": "string",
+      "format": "time",
+      "title": "Uhrzeit (Beginn)"
+    },
+
+    "endTime": {
+      "type": "string",
+      "format": "time",
+      "title": "Uhrzeit (Ende)"
+    },
+    "description": {
+      "type": "string",
+      "format": "textarea",
+      "title": "Beschreibung"
+    },
+    "location": {
+      "type": "object",
+      "title": "Veranstaltungsort",
+      "properties": {
+        "street_address": {
+          "type": "string",
+          "title": "Straße & Hausnummer",
+          "default": ""
+        },
+        "zip": {
+          "type": "string",
+          "title": "PLZ",
+          "default": ""
+        },
+        "city": {
+          "type": "string",
+          "title": "Stadt",
+          "default": "Münster"
+        },
+        "fulladdress": {
+          "type": "string",
+          "title":"Addresse",
+            "template": "{{street_address}}, {{zip}} {{city}}",
+          "watch": {
+            "zip": "location.zip",
+            "city": "location.city",
+            "street_address": "location.street_address"
+          }
+        }
+      }
+    }
+  }
+}
