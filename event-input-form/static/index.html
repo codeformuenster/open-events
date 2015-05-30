@@ -3,8 +3,9 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Termin-Eingabeformular Test</title>
-    
+    <title>Termin-Eingabeformular - Open Events</title>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
     <!-- Foundation CSS framework (Bootstrap and jQueryUI also supported) -->
     <link rel='stylesheet' href='//cdn.jsdelivr.net/foundation/5.0.2/css/foundation.min.css'>
     <!-- Font Awesome icons (Bootstrap, Foundation, and jQueryUI also supported) -->
@@ -21,12 +22,12 @@
   <body>
     <div class='row'>
       <div class='medium-12 columns'>
-        <h1>CSS Integration JSON Editor Example</h1>
+        <h1>Termin eintragen</h1>
       </div>
     </div>
     <div class='row'>
       <div class='medium-12-columns'>
-        <button id='submit' class='tiny'>Submit (console.log)</button>
+        <button id='submit' class='tiny'>abschicken</button>
         <button id='restore' class='secondary tiny'>Restore to Default</button>
         <span id='valid_indicator' class='label'></span>
       </div>
@@ -64,7 +65,20 @@
       // Hook up the submit button to log to the console
       document.getElementById('submit').addEventListener('click',function() {
         // Get the value from the editor
-        console.log(editor.getValue());
+        $.ajax({
+            type: "POST",
+            url: "/event",
+            data : JSON.stringify({ 'event': editor.getValue() } ),
+            success: function(results) {
+              alert("Alles gut, vielen Dank!");
+            },
+            dataType:"json",
+            contentType:"application/json; charset=utf-8",
+            error: function(error) {
+              alert("OH NEIN! Hat nicht geklappt!");
+            }
+          });
+
       });
       
       // Hook up the Restore to Default button
