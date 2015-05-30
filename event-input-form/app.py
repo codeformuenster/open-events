@@ -1,27 +1,41 @@
-import time
-import requests
-import requests_cache
+import socket
+import json
+import sys
 
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
-requests_cache.install_cache('github_cache', backend='sqlite', expire_after=180)
+HOST = 'logstash'
+PORT = 7001
+
+@app.route('/event', methods=['POST'])
+def event():
+    # FIXME! try/except
+    event_json = request.get_json()
+    app.logger.debug(event_json)
+
+    try:
+      sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    except socket.error, msg:
+      app.logger.error(msg[1])
+      abort()
+
+    try:
+      sock.connect((HOST, PORT))
+    except socket.error, msg:
+      app.logger.error(msg[1])
+      abort
+
+    # msg = {'@message': 'python test message', '@tags': ['python', 'test']}
+
+    sock.send(json.dumps(event_json)+"\n")
+    sock.close()
+    return ""
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def home():
-    if request.method == 'POST':
-        # user inputs
-        first = request.form.get('first')
-        second = request.form.get('second')
-        # api call
-        url = "https://api.github.com/search/users?q=location:{0}+language:{1}".format(first, second)
-        now = time.ctime(int(time.time()))
-        response = requests.get(url)
-        print "Time: {0} / Used Cache: {1}".format(now, response.from_cache)
-        # return json
-        return jsonify(response.json())
     return render_template('index.html')
 
 
