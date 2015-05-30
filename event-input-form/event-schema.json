@@ -59,6 +59,11 @@
       "type": "object",
       "title": "Veranstaltungsort",
       "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name der Location",
+          "default": ""
+        },
         "street_address": {
           "type": "string",
           "title": "Straße & Hausnummer",
