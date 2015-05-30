@@ -6,9 +6,9 @@ use Log;
 use Time::ParseDate;
 use POSIX qw(strftime);
 use Data::Dumper;
-use JSON qw( encode_json decode_json ); 
+use JSON qw( encode_json decode_json );
 
-my $IMP_SOURCE = 0; 
+my $IMP_SOURCE = 0;
 my $IMP_STATS = {};
 
 sub init_import_stats {
@@ -20,22 +20,22 @@ sub init_import_stats {
 }
 
 sub save_import_stats {
-# 
+#
 # 	my $dbh = shift;
  	my $errors = ($IMP_STATS->{total}||0) - ($IMP_STATS->{new}||0) - ($IMP_STATS->{updated}||0);
 # 	my $sth = $dbh->prepare( '
-# 		INSERT INTO event_import_stats( location_source_id, found_events, new_events, updated_events, error_events, error_message ) 
+# 		INSERT INTO event_import_stats( location_source_id, found_events, new_events, updated_events, error_events, error_message )
 # 		values ( ?,?,?,?,?,? )'
-# 	);  
-# 	$sth->execute( $IMP_SOURCE, $IMP_STATS->{total} ||0,$IMP_STATS->{new}||0, $IMP_STATS->{updated}||0, 
+# 	);
+# 	$sth->execute( $IMP_SOURCE, $IMP_STATS->{total} ||0,$IMP_STATS->{new}||0, $IMP_STATS->{updated}||0,
 # 		$errors, $IMP_STATS->{errors}  ? Dumper( $IMP_STATS->{errors}): undef  );
 # 	$sth->finish();
-# 
+#
 # 	# delete future events that have changed / were cancelled
 # 	$sth = $dbh->prepare( 'DELETE FROM event WHERE location_source_id = ? AND event_datetime > now() AND date(last_modified) <> date(now()) ');
 # 	$sth->execute( $IMP_SOURCE );
 # 	$sth->finish();
-# 
+#
  	log_info( "<-------- import source ".$IMP_SOURCE." --------->");
  	log_info( "found events:", $IMP_STATS->{total} );
  	log_error("no events found! That's probably wrong!" ) unless ( $IMP_STATS->{total} );
@@ -73,13 +73,13 @@ sub save_event {
 					if ( $checkmonth < $month  ) {
 						$checkyear ++;
 					}
-				} 
+				}
 				my $date = ( $checkyear ).'-'.sprintf('%02d',$checkmonth ).'-'.sprintf('%02d',$checkday );
 				push @dates, $date;
 			}
 			$event->{datetime} = $dates[0];
 			$event->{enddate} = $dates[1] if ( scalar @dates == 2);
-			
+
 			# still got no date? then try to parse with parsedate()
 			unless ( $event->{datetime} ) {
 				my $seconds_since_jan1_1970 = parsedate($event->{parsedate} );
@@ -106,7 +106,7 @@ sub save_event {
 	}
 	if ( !$event->{type} ) {
 		$event->{type} = 'theater' if ($event->{title} =~ /theater/i );
-		$event->{type} = 'konzert' if ( (!$event->{type}) && ($event->{title} =~ /konzert/i ) );		
+		$event->{type} = 'konzert' if ( (!$event->{type}) && ($event->{title} =~ /konzert/i ) );
 		$event->{type} = 'disco' if ( (!$event->{type}) && ($event->{title} =~ /disco/i ) );
 		$event->{type} = 'party' if ( (!$event->{type}) && ($event->{title} =~ /party/i ) );
 		$event->{type} = $event->{default_type} unless $event->{type};
@@ -121,7 +121,7 @@ sub save_event {
 	}
 
 	my $result = 1;
-#	my $sth = $dbh->prepare( 'SELECT event_id FROM event WHERE event_md5 = ?' );  
+#	my $sth = $dbh->prepare( 'SELECT event_id FROM event WHERE event_md5 = ?' );
 #	$sth->execute( $event->{md5} );
 #	my $row = $sth->fetchrow_hashref();
 #	$result = 2 if( $row->{event_id});
@@ -129,17 +129,18 @@ sub save_event {
 	$IMP_STATS->{$itype} ++;
 
 	log_debug( "==> event", $event->{type}, "|", $event->{datetime}, "-", $event->{enddate}, "|", $event->{title} );
-#	$sth = $dbh->prepare( 'INSERT INTO event( location_id, location_source_id, event_title, event_datetime, event_enddate, event_md5, event_link, event_description, event_image, event_type ) 
-#		values( ?,?,?, ?, ?,?, ?,?,?, ? ) 
-#		on duplicate key update 	event_title = values( event_title), event_link = values( event_link),  event_enddate = values( event_enddate ), 
+#	$sth = $dbh->prepare( 'INSERT INTO event( location_id, location_source_id, event_title, event_datetime, event_enddate, event_md5, event_link, event_description, event_image, event_type )
+#		values( ?,?,?, ?, ?,?, ?,?,?, ? )
+#		on duplicate key update 	event_title = values( event_title), event_link = values( event_link),  event_enddate = values( event_enddate ),
 #									event_datetime = values( event_datetime),event_description = values( event_description),
 #									location_source_id = values( location_source_id ), last_modified = now()
 #
-#	' );  
+#	' );
 #	$sth->execute( $location_id, $IMP_SOURCE, $event->{title},$event->{datetime}, $event->{enddate}, $event->{md5}, $event->{link}, $event->{description}, $event->{image}, $event->{type} );
 
 	my $json = encode_json( $event );
 	log_debug("event json", $json );
+	log_info("event json", $json );
 
 	return $result;
 }

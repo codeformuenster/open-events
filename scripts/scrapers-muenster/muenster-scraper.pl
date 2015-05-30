@@ -10,7 +10,7 @@ use warnings;
 use Log;
 use MsEvent;
 use MsScraperConfig;
-use JSON qw( encode_json decode_json ); 
+use JSON qw( encode_json decode_json );
 use Try::Tiny;
 
 # global fb auth token
@@ -20,13 +20,13 @@ my $token ;
 
 #
 # read ini file and connect to mysql
-# 
+#
 my $cfg = Config::IniFiles->new( -file => "muenster.ini" );
 
 
 
 #
-# commandline parameters 
+# commandline parameters
 #
 my $parse_only = shift;
 my $loglevel = shift || ( $parse_only ? 'debug' : "info" );
@@ -45,7 +45,7 @@ my $transformers = MsScraperConfig::TRANSFORMATORS;
 # read locations definition file
 my $locations_file = 'locations.json';
 open(my $fh, '<', $locations_file) or die "Could not open file '$locations_file' $!";
-my $jsonfile = ""; 
+my $jsonfile = "";
 while (my $row = <$fh>) {
   $jsonfile.=$row;
 }
@@ -76,7 +76,7 @@ sub parse_terminseite {
 		log_error("MISSING PARSER FOR ", $args->{parser} );
 		return;
 	}
-	
+
 	#
 	# parse all the urls
 	#
@@ -93,8 +93,3 @@ sub parse_terminseite {
 	MsEvent::save_import_stats( );
 
 }
-
-
-
-
-

@@ -13,7 +13,7 @@ use DBI;
 use Log;
 use MsEvent;
 use HTML::TreeBuilder::XPath;
-use JSON qw( decode_json ); 
+use JSON qw( decode_json );
 use LWP::Simple;
 use Try::Tiny;
 use POSIX qw(strftime);
@@ -58,8 +58,8 @@ my $token ;
 #
 use constant {
 	TRANSFORMATORS => {
-		conny_kramer => sub { 
-			my $url = shift; 
+		conny_kramer => sub {
+			my $url = shift;
 			log_debug("run", $url );
 			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
 			log_debug("html", $html );
@@ -68,7 +68,7 @@ use constant {
 			for my $node ( @$nodes ) {
 				my $event = {
 					title => $node->findvalue('h2'),
-					link => 'http://www.connykramer.ms', 
+					link => 'http://www.connykramer.ms',
 					description => $node->findvalue('div[@class="info"]' ),
 					image => "",
 					type => 'disco'
@@ -91,20 +91,20 @@ use constant {
 
 
 # <div class="termin">
-	# 
+	#
 # 	<img src="http://www5.stadt-muenster.de/mm_internet/bilder/v_send3.jpg" border="0" alt="Illustration">
-	# 
+	#
 # 	<p class="datum"><strong>18.04.2015 - 26.04.2015</strong></p>
 # 	<h3><a href="http://www5.stadt-muenster.de/mm/vk_detail.cfm?v_id=122989&highlight=1">Frühjahrssend</a></h3>
 # 	<p>
 # 	<strong>Münsters größtes Volksfest</strong><br>
-# 	Die größte Kirmes des Münsterlandes: Schaustellerbetriebe aus der gesamten Bundesrepublik präsentieren Nostalgisches ebenso wie die neuesten Fahrgeschäfte. <br>	
-# 	<a href="http://www5.stadt-muenster.de/mm/vk_detail.cfm?v_id=122989&highlight=1" title="mehr über 'Frühjahrssend'">mehr...</a>	
+# 	Die größte Kirmes des Münsterlandes: Schaustellerbetriebe aus der gesamten Bundesrepublik präsentieren Nostalgisches ebenso wie die neuesten Fahrgeschäfte. <br>
+# 	<a href="http://www5.stadt-muenster.de/mm/vk_detail.cfm?v_id=122989&highlight=1" title="mehr über 'Frühjahrssend'">mehr...</a>
 # 	</p>
 # </div>
 
 		muenster => sub {
-			my $url = shift; 
+			my $url = shift;
 			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
 
 			my $events = [];
@@ -116,8 +116,8 @@ use constant {
 				my $event = {
 					parsedate => $node->findvalue('p[@class="datum"]/strong'),
 					title => $title,
-					link => $node->findvalue('h3/a/@href'), 
-					description => $desc, 
+					link => $node->findvalue('h3/a/@href'),
+					description => $desc,
 					image => $node->findvalue('img/@src'),
 					type => 'muenster'
 				};
@@ -128,7 +128,7 @@ use constant {
 		},
 
 		gleis22 => sub {
-			my $url = shift; 
+			my $url = shift;
 			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
 
 			my $events = [];
@@ -156,7 +156,7 @@ use constant {
 				my $event = {
 					parsedate => $node->findvalue('td[@width="60"]'),
 					title => $title,
-					link => 'http://www.gleis22.de', 
+					link => 'http://www.gleis22.de',
 					description => $description,
 					image => "",
 					type => $type
@@ -174,7 +174,7 @@ use constant {
 		#  	    23.10.2014, 20 Uhr<span class="hidden">:</span><br />
 		#  		<strong>Lesung:</strong>
 		#  	<a href="http://www.uni-muenster.de/HausDerNiederlande/veranstaltungen/ws1415/detail.shtml?id=000127" class="int" rel="internal"><strong>Stefan Brijs: Post für Mrs. Bromley</strong></a>
-		#  	</p>			
+		#  	</p>
 		haus_der_nl => sub {
 			my $url = shift;
 			my $events = [];
@@ -221,7 +221,7 @@ use constant {
 			log_debug("villa ten hompel got matches: " , scalar @matches );
 			for my $match ( @matches ) {
 				if ( $match =~ /<h3>.*?([0-9.:])+\s*Uhr.*<\/h3>(.*?)<a[^>]+href="([^"]+)"[^>]+>(.*?)<\/a>(.*)$/ims ) {
-					my $event = { 
+					my $event = {
 						link => 'http://www.stadt-muenster.de/' . $3,
 						type => 'kultur',
 						description => $4." - ".$5." - ".$2,
@@ -238,16 +238,16 @@ use constant {
 			}
 			return $events;
 		},
-			
+
   # 		  <dt>
   #               <p class="datum">Freitag, 26.12.2014</p>
   #               <p class="uhrzeit">14:30 Uhr</p>
   #           </dt>
-                       
+
   #           <dd>
   #               <p class="titel"><a href="http://www.lwl.org/lwlkalender/VeranstaltungAction.do;jsessionid=2BCDA4513C29859617B46E5EA5742FF0?id=1032395"><span>Highlight-Tour</span></a></p>
   #               <p class="u-titel"><a href="http://www.lwl.org/lwlkalender/VeranstaltungAction.do;jsessionid=2BCDA4513C29859617B46E5EA5742FF0?id=1032395"><span>Besonderer Rundgang durch die Sammlung</span></a></p>
-            
+
   #               <p class="ort">Münster</p>
   #               <p class="v-ort">Domplatz 10, 48143 Münster</p>
   #               <hr />
@@ -271,7 +271,7 @@ use constant {
 								my $link = $1;
 								$link =~ s/;jsessionid=[^&?]+//;
 								$event->{link} = $link;
-							} 
+							}
 						}
 					}
 					$event->{type} = 'kultur';
@@ -325,14 +325,14 @@ use constant {
 				my $datum = $node->findvalue('div[@class="content"]/div[@class="field field-name-field-datum field-type-datetime field-label-hidden"]/div/div/span');
 				if ( $datum =~ /,\s*(\d\d?).\s*([a-zA-Z]+)\s+(\d{2,4})/ ) {
 					$event->{datetime} = sprintf( '%04d-%02d-%02d', $3, +MONTHS->{$2} || $2, $1 );
-					my $uhr = ""; 
+					my $uhr = "";
 					if ( $event->{description} =~ /(\d\d)([\.:]\d\d)?\s*Uhr/i ) {
 						$uhr = $1.':'.(substr($2, 1)||'00').':00';
 					}
 					if ( (!$uhr) && ( $event->{description} =~ /ab\s*(\d\d)([\.:]\d\d)?/i ) ) {
 						$uhr = $1.':'.(substr($2, 1)||'00').':00';
 					}
-					$event->{datetime}.= ' '.$uhr if $uhr; 
+					$event->{datetime}.= ' '.$uhr if $uhr;
 				}
 				push @$events, $event;
 			}
@@ -341,7 +341,7 @@ use constant {
 
 
 
-	
+
 # <div id="post-3185" class="hentry vevent type-tribe_events post-3185 tribe-clearfix tribe-events-category-session tribe-events-venue-183 tribe-events-organizer-182 hentry vevent type-tribe_events tribe-clearfix ">
 # <!-- Event Image -->
 # <div class="tribe-events-event-image"><a href="http://www.hotjazzclub.de/veranstaltung/monday-night-session-mit-snakatak-6/" title="Monday Night Session mit Snakatak">
@@ -360,11 +360,11 @@ use constant {
 # </div>
 # <div class="my-tribe-events-stilrichtung"><h2>Jazz, Rock &amp; Fusion</h2></div>
 # <div class="my-tribe-events-meta">
-# 	<span class="my-tribe-events-preisinfos">Eintritt frei!</span>	 
+# 	<span class="my-tribe-events-preisinfos">Eintritt frei!</span>
 # 	<a class='fb-share' href='https://facebook.com/events/825985697459821' target='_BLANK'></a></div>
-# 
+#
 # </div><!-- .tribe-events-list-event-description -->		</div><!-- .hentry .vevent -->
- 	
+
 
 		hotjazzclub  => sub {
 			my $url = shift;
@@ -416,13 +416,13 @@ use constant {
 			unless ( $token ) {
 
 				#
-				# check if there is a user auth token file on disk 
+				# check if there is a user auth token file on disk
 				#
 				my $filename = 'fb-token.txt';
 				open(my $fh, '<:encoding(UTF-8)', $filename);
 				my $epoch_timestamp = $fh ? (stat($fh))[9] : "";
 				#my $timestamp       = localtime($epoch_timestamp);
-				my $now = time;				
+				my $now = time;
 				log_debug("timestamps", $epoch_timestamp, $now );
 				if ( $fh && ( $epoch_timestamp > $now-60*60 ) ) {
 					log_info("using FB USER auth token from file", $filename );
@@ -440,7 +440,7 @@ use constant {
 						log_error("DID NOT GET FB ACCESS TOKEN, DUDE!!");
 					}
 				}
-			}	
+			}
 			my $fb_url = '';
 			if ($url =~ m#^https://www.facebook.com/([^/]+)/?$#i ) {
 				$fb_url =  'https://graph.facebook.com/'.$1.'/events';
@@ -457,7 +457,7 @@ use constant {
 			if ( $fb_url ) {
 				$token =~ /access_token=(.+)$/;
 				my $access_token = $1;
-				my $appsecret_proof= hmac_sha256_hex( $access_token, $fbSc); 
+				my $appsecret_proof= hmac_sha256_hex( $access_token, $fbSc);
 
 				$fb_url .= '?'.$token; # .'&appsecret_proof='.$appsecret_proof;
 				$fb_url .= '&since='.time;
@@ -485,7 +485,7 @@ use constant {
 					}
 				}
 			}
-			return $events;			
+			return $events;
 
 		},
 
