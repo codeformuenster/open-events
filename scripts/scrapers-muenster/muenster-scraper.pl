@@ -21,7 +21,7 @@ my $token ;
 #
 # read ini file and connect to mysql
 # 
-my $cfg = Config::IniFiles->new( -file => "../conf/app.ini" );
+my $cfg = Config::IniFiles->new( -file => "muenster.ini" );
 
 
 
@@ -37,23 +37,29 @@ log_info( "parsing only ", $parse_only ) if $parse_only;
 
 my $transformers = MsScraperConfig::TRANSFORMATORS;
 
-my $locations_export = []; 
-while ( my $row = $sth->fetchrow_hashref() ) {
-	log_debug( $row->{parser} );
+
+
+
+
+
+# read locations definition file
+my $locations_file = 'locations.json';
+open(my $fh, '<', $locations_file) or die "Could not open file '$locations_file' $!";
+my $jsonfile = ""; 
+while (my $row = <$fh>) {
+  $jsonfile.=$row;
+}
+my $locations = decode_json( $jsonfile );
+
+
+# parse events from each location page
+for my $row ( @$locations) {
+	log_debug( "parsing", $row );
 	if ( (!$parse_only ) || ( $parse_only && ( $row->{parser} eq $parse_only)  ) || ( $parse_only && ( $row->{source_id} eq $parse_only )  )  ) {
 		log_info( "===========================>",$row->{parser},"terminseite location:", $row->{location_id}, "source:", $row->{source_id}, $row->{source_url});
-		#parse_terminseite( $row );
+		parse_terminseite( $row );
 	}
-	for my $key ( qw( created_date last_modified active ) ) {
-		delete $row->{$key};
-	}
-	push @$locations_export, $row;
-
 }
-
-my $json_export_file = 'data/locations.json';
-open(my $fh, '>', $json_export_file ) or die "Could not write to file '$json_export_file' $!";
-print $fh encode_json( $locations_export );
 close $fh;
 
 
@@ -80,10 +86,11 @@ sub parse_terminseite {
 	my $results = { };
 	for my $event (@$events) {
 		$event->{default_type} = $args->{default_event_type} if ($args->{default_event_type} && !$event->{type} );
-		my $res = MsEvent::save_event( $dbh, $location_id, $event );
+		$event->{location_id} = $location_id;
+		my $res = MsEvent::save_event( $event );
 	}
 
-	MsEvent::save_import_stats( $dbh );
+	MsEvent::save_import_stats( );
 
 }
 

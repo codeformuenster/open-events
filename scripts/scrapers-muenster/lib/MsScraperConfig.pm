@@ -60,8 +60,9 @@ use constant {
 	TRANSFORMATORS => {
 		conny_kramer => sub { 
 			my $url = shift; 
+			log_debug("run", $url );
 			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
-
+			log_debug("html", $html );
 			my $events = [];
 			my $nodes = $html->findnodes( '//div[@class="boxRight"]');
 			for my $node ( @$nodes ) {
@@ -409,6 +410,7 @@ use constant {
 			my $cfg = shift;
 			my $fbId = $cfg->val( 'fb', 'id' );
 			my $fbSc = $cfg->val( 'fb', 'sc' );
+			return [] unless ( $fbId && $fbSc );
 
 			# get auth token
 			unless ( $token ) {
