@@ -139,8 +139,7 @@ sub save_event {
 #	$sth->execute( $location_id, $IMP_SOURCE, $event->{title},$event->{datetime}, $event->{enddate}, $event->{md5}, $event->{link}, $event->{description}, $event->{image}, $event->{type} );
 
 	my $json = encode_json( $event );
-	log_debug("event json", $json );
-	log_info("event json", $json );
+	print STDOUT $json . "\n";
 
 	return $result;
 }

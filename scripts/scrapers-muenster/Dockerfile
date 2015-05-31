@@ -1,5 +1,6 @@
 FROM perl:5
 
+RUN apt-get update && apt-get install -y netcat
 WORKDIR /usr/src/myapp
 
 COPY install.sh /usr/src/myapp/
