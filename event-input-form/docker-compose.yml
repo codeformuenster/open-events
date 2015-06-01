@@ -1,0 +1,6 @@
+eventinputform:
+  build: .
+  ports:
+    - "5000:5000"
+  external_links:
+    - datahub_logstash_1:logstash

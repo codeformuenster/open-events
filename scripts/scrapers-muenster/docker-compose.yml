@@ -1,0 +1,5 @@
+scrapersmuenster:
+  build: .
+  command: ./scrape-loop-logstash.sh
+  external_links:
+    - datahub_logstash_1:logstash
