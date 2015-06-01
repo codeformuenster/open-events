@@ -1,5 +1,8 @@
 var cheerio = require('cheerio');
     request = require('request');
+    moment = require('moment');
+    moment().format();
+    moment().locale("de");
     url = 'http://www.fzw.de/programm/'
 
 
@@ -8,8 +11,9 @@ request(url, function (error, response, body) {
 	if (!error) {
   	var $ = cheerio.load(body);
   	$('div[style="position: relative; background: url(img/blank.gif);"] > a').each(function(i, element) {
-      eventUrl = "http://www.fzw.de/"+ $(this).attr('href');
-      request(eventUrl, function (error, response, body) {
+      var eventUrl = [];
+      eventUrl[i] = "http://www.fzw.de/"+ $(this).attr('href');
+      request(eventUrl[i], function (error, response, body) {
       	if (!error) {
           var $ = cheerio.load(body);
           var eventDate = $('.bigBox > h2:first-of-type').text();
@@ -29,6 +33,7 @@ request(url, function (error, response, body) {
             "@type": "Event",
             "name": eventName,
             "description": eventDescription,
+            "location_id": "44101",
             "location": {
               "@type": "Place",
               "address": {
@@ -38,8 +43,8 @@ request(url, function (error, response, body) {
                 "postalCode" : "44137"
                 }
               },
-            "startDate": eventDate + eventStartTime,
-            "url": eventUrl
+            "startDate": moment(eventDate +  " " + eventStartTime, "DD.MM..YYYY HH.mm") ,
+            "url": eventUrl[i]
           }
 
           console.log(JSON.stringify(eventJSON));
