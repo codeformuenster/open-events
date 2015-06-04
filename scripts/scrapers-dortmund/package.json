@@ -1,0 +1,17 @@
+{
+  "name": "scrapers-dortmund",
+  "version": "1.0.0",
+  "description": "Example scraper for the open-events project written in node.js with cheerio",
+  "main": "fzw-scraper.js",
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "request": "^2.56.0",
+    "moment": "^2.10.3"
+  },
+  "devDependencies": {},
+  "author": "Marcel Reschke",
+  "license": "ISC",
+  "engines": {
+  "node": ">=0.8.0"
+}
+}
