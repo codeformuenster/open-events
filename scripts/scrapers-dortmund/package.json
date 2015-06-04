@@ -12,6 +12,6 @@
   "author": "Marcel Reschke",
   "license": "ISC",
   "engines": {
-  "node": ">=0.8.0"
+  "node": ">=0.12.2"
 }
 }
