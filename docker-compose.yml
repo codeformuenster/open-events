@@ -1,0 +1,43 @@
+logstash:
+  image: logstash:1.5
+  command: logstash -f /logstash/conf/*.conf
+  ports:
+    - "7001:7001"
+  volumes:
+    - logstash:/logstash
+  links:
+    - elasticsearch
+
+elasticsearch:
+  image: elasticsearch:1.5
+  volumes:
+    - elasticsearch/config/templates:/usr/share/elasticsearch/config/templates
+    - elasticsearch/data:/usr/share/elasticsearch/data
+  ports:
+    - "9200:9200"
+
+kibana:
+  image: webwurst/kibana
+  ports:
+    - "5601:5601"
+  links:
+    - elasticsearch
+
+eventinputform:
+  image: codeformuenster/open-events_event-input-form
+  ports:
+    - "5000:5000"
+  links:
+    - logstash
+
+# scrapersmuenster:
+#   image: codeformuenster/open-events_scrapers-muenster
+#   command: ./scrape-loop-logstash.sh
+#   links:
+#     - logstash
+
+parkleitsystemapi:
+  image: codeformuenster/parkleitsystemapi
+  command: ./scrape-loop-logstash.sh
+  links:
+    - logstash

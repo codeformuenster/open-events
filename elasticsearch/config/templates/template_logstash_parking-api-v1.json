@@ -1,0 +1,17 @@
+{
+  "template_logstash_parking-api-v1" : {
+        "template" : "logstash-*",
+        "mappings" : {
+            "parking-api-v1" : {
+                "properties" : {
+                    "location" : {
+                        "properties" : {
+                          "type" : { "type" : "string" },
+                          "coordinates" : { "type": "geo_point" }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
