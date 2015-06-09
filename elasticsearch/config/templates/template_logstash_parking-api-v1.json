@@ -3,12 +3,11 @@
         "template" : "logstash-*",
         "mappings" : {
             "parking-api-v1" : {
-                "properties" : {
-                    "location" : {
-                        "properties" : {
-                          "type" : { "type" : "string" },
-                          "coordinates" : { "type": "geo_point" }
-                        }
+                "properties": {
+                    "location": {
+                        "type": "geo_shape",
+                        "tree": "quadtree",
+                        "precision": "1m"
                     }
                 }
             }
