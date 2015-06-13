@@ -9,7 +9,7 @@ logstash:
     - elasticsearch
 
 elasticsearch:
-  image: elasticsearch:1.5
+  image: elasticsearch:1.6
   volumes:
     - elasticsearch/config/templates:/usr/share/elasticsearch/config/templates
     - elasticsearch/data:/usr/share/elasticsearch/data
