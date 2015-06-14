@@ -1,0 +1,87 @@
+{
+  "app_name": "testapp",
+  "services": [{
+    "components": [{
+      "component_name": "eventinputform",
+      "dependencies": [{
+        "alias": "logstash",
+        "name": "logstash/logstash",
+        "port": 7001
+      }],
+      "image": "codeformuenster/open-events_event-input-form",
+      "ports": [
+        5000
+      ],
+      "domains": {
+        "eventinputform-cfm.gigantic.io": 5000
+      }
+    }],
+    "service_name": "eventinputform"
+  }, {
+    "components": [{
+      "component_name": "kibana",
+      "dependencies": [{
+        "alias": "elasticsearch",
+        "name": "elasticsearch/elasticsearch",
+        "port": 9200
+      }],
+      "image": "webwurst/kibana",
+      "ports": [
+        5601
+      ],
+      "domains": {
+        "kibana-cfm.gigantic.io": 5601
+      }
+    }],
+    "service_name": "kibana"
+  }, {
+    "components": [{
+      "component_name": "elasticsearch",
+      "image": "codeformuenster/open-events_elasticsearch",
+      "ports": [
+        9200
+      ],
+      "domains": {
+        "elasticsearch-cfm.gigantic.io": 9200
+      },
+      "volumes": [{
+        "path": "/usr/share/elasticsearch/data",
+        "size": "2 GB"
+      }]
+    }],
+    "service_name": "elasticsearch"
+  }, {
+    "components": [{
+      "args": [
+        "logstash",
+        "-f",
+        "/logstash/conf/*.conf"
+      ],
+      "component_name": "logstash",
+      "dependencies": [{
+        "alias": "elasticsearch",
+        "name": "elasticsearch/elasticsearch",
+        "port": 9200
+      }],
+      "image": "codeformuenster/open-events_logstash",
+      "ports": [
+        7001
+      ]
+    }],
+    "service_name": "logstash"
+  }, {
+    "components": [{
+      "args": [
+        "./scrape-loop-logstash.sh"
+      ],
+      "component_name": "parkleitsystemapi",
+      "dependencies": [{
+        "alias": "logstash",
+        "name": "logstash/logstash",
+        "port": 7001
+      }],
+      "image": "codeformuenster/parkleitsystemapi"
+    }],
+    "service_name": "parkleitsystemapi"
+  }]
+}
