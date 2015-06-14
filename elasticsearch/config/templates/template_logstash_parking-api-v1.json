@@ -1,16 +1,25 @@
 {
-  "template_logstash_parking-api-v1" : {
-        "template" : "logstash-*",
-        "mappings" : {
-            "parking-api-v1" : {
-                "properties": {
-                    "location": {
-                        "type": "geo_shape",
-                        "tree": "quadtree",
-                        "precision": "1m"
-                    }
-                }
-            }
+  "template_logstash_parking-api-v1": {
+    "template": "logstash-*",
+    "mappings": {
+      "parking-api-v1": {
+        "properties": {
+          "location_geo_point": {
+            "type": "geo_point",
+            "geohash_precision": "1m"
+          },
+          "location": {
+            "type": "geo_shape",
+            "tree": "quadtree",
+            "precision": "1m"
+          }
         }
+      }
     }
+  }
+}
+
+"location": {
+  "lat":     40.722,
+  "lon":    -73.989
 }
