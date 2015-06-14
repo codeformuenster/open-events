@@ -1,5 +1,5 @@
 {
-  "app_name": "testapp",
+  "app_name": "open-events",
   "services": [{
     "components": [{
       "component_name": "eventinputform",

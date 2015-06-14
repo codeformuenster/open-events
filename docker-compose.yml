@@ -1,5 +1,6 @@
 logstash:
-  image: logstash:1.5
+  build: logstash/
+  # image: logstash:1.5
   command: logstash -f /logstash/conf/*.conf
   ports:
     - "7001:7001"
@@ -30,14 +31,21 @@ eventinputform:
   links:
     - logstash
 
-# scrapersmuenster:
-#   image: codeformuenster/open-events_scrapers-muenster
-#   command: ./scrape-loop-logstash.sh
-#   links:
-#     - logstash
-
 parkleitsystemapi:
   image: codeformuenster/parkleitsystemapi
   command: ./scrape-loop-logstash.sh
   links:
     - logstash
+
+# scrapersmuenster:
+#  image: codeformuenster/open-events_scrapers-muenster
+#  command: ./scrape-loop-logstash.sh
+#  links:
+#    - logstash
+
+scrapersdortmund:
+ # image: codeformuenster/open-events_scrapers-dortmund
+ build: scripts/scrapers-dortmund
+ command: ./scrape-loop-logstash.sh
+ links:
+   - logstash

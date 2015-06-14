@@ -1,20 +1,19 @@
-var cheerio = require('cheerio');
-    request = require('request');
-    moment = require('moment');
-    moment().format();
-    moment().locale("de");
-    url = 'http://www.fzw.de/programm/'
+var cheerio = require('cheerio'),
+  request = require('request'),
+  moment = require('moment');
 
+moment().format();
+moment().locale("de");
+url = 'http://www.fzw.de/programm/'
 
-
-request(url, function (error, response, body) {
-	if (!error) {
-  	var $ = cheerio.load(body);
-  	$('div[style="position: relative; background: url(img/blank.gif);"] > a').each(function(i, element) {
+request(url, function(error, response, body) {
+  if (!error) {
+    var $ = cheerio.load(body);
+    $('div[style="position: relative; background: url(img/blank.gif);"] > a').each(function(i, element) {
       var eventUrl = [];
-      eventUrl[i] = "http://www.fzw.de/"+ $(this).attr('href');
-      request(eventUrl[i], function (error, response, body) {
-      	if (!error) {
+      eventUrl[i] = "http://www.fzw.de/" + $(this).attr('href');
+      request(eventUrl[i], function(error, response, body) {
+        if (!error) {
           var $ = cheerio.load(body);
           var eventDate = $('.bigBox > h2:first-of-type').text();
           eventDate = eventDate.substring(4);
@@ -38,25 +37,26 @@ request(url, function (error, response, body) {
               "@type": "Place",
               "address": {
                 "@type": "PostalAddress",
-                "streetAddress" : "Ritterstr. 20",
-                "addressLocality" : "Dortmund",
-                "postalCode" : "44137"
-                }
+                "streetAddress": "Ritterstr. 20",
+                "addressLocality": "Dortmund",
+                "postalCode": "44137"
               },
-            "startDate": moment(eventDate +  " " + eventStartTime, "DD.MM..YYYY HH.mm") ,
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": "51.51481",
+                "longitude": "7.45012"
+              }
+            },
+            "startDate": moment(eventDate + " " + eventStartTime, "DD.MM..YYYY HH.mm"),
             "url": eventUrl[i]
           }
-
           console.log(JSON.stringify(eventJSON));
         } else {
-      		console.log("Event HTTP Request fehlgeschlagen: " + error);
-      	}
+          console.log("Event HTTP Request fehlgeschlagen: " + error);
+        }
       });
     });
   } else {
-		console.log("Übersicht HTTP Request fehlgeschlagen: " + error);
-	}
-
-
-
+    console.log("Übersicht HTTP Request fehlgeschlagen: " + error);
+  }
 });
