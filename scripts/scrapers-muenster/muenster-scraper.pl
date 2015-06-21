@@ -68,6 +68,8 @@ sub parse_terminseite {
 	my $url 		= $args->{source_url};
 	my $source_id 	= $args->{source_id};
 	my $location_id = $args->{location_id};
+  my $location = $args;
+
 	unless ($url) {
 		log_error( "NO URL") ;
 		return ;
@@ -87,6 +89,8 @@ sub parse_terminseite {
 	for my $event (@$events) {
 		$event->{default_type} = $args->{default_event_type} if ($args->{default_event_type} && !$event->{type} );
 		$event->{location_id} = $location_id;
+		$event->{location} = $location;
+
 		my $res = MsEvent::save_event( $event );
 	}
 

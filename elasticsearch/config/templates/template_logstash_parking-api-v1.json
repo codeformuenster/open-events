@@ -4,7 +4,19 @@
     "mappings": {
       "_default_": {
         "properties": {
+          "location.address.geo_point": {
+            "type": "geo_point",
+            "geohash_precision": "1m"
+          },
           "geo_point": {
+            "type": "geo_point",
+            "geohash_precision": "1m"
+          },
+          /*"geo_point_geocoder": {
+            "type": "geo_point",
+            "geohash_precision": "1m"
+          },*/
+          "geo_point_geocoder_reverse": {
             "type": "geo_point",
             "geohash_precision": "1m"
           },

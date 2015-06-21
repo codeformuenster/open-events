@@ -1,11 +1,13 @@
 logstash:
-  build: logstash/
+  image: local/logstash-filter-geocoder
+  # build: logstash/
   # image: logstash:1.5
-  command: logstash -f /logstash/conf/*.conf
+  # command: logstash -f /logstash/conf/*.conf
+  command: bin/logstash -f /opt/logstash/conf/*.conf
   ports:
     - "7001:7001"
   volumes:
-    - logstash:/logstash
+    - logstash/conf:/opt/logstash/conf
   links:
     - elasticsearch
 
@@ -24,28 +26,30 @@ kibana:
   links:
     - elasticsearch
 
-eventinputform:
-  image: codeformuenster/open-events_event-input-form
-  ports:
-    - "5000:5000"
-  links:
-    - logstash
+# eventinputform:
+#   image: codeformuenster/open-events_event-input-form
+#   ports:
+#     - "5000:5000"
+#   links:
+#     - logstash
 
-parkleitsystemapi:
-  image: codeformuenster/parkleitsystemapi
-  command: ./scrape-loop-logstash.sh
-  links:
-    - logstash
+# parkleitsystemapi:
+#   image: codeformuenster/parkleitsystemapi
+#   command: ./scrape-loop-logstash.sh
+#   links:
+#     - logstash
 
-# scrapersmuenster:
-#  image: codeformuenster/open-events_scrapers-muenster
-#  command: ./scrape-loop-logstash.sh
-#  links:
-#    - logstash
-
-scrapersdortmund:
- # image: codeformuenster/open-events_scrapers-dortmund
- build: scripts/scrapers-dortmund
+scrapersmuenster:
+ # image: scrapersmuenster_scrapersmuenster
+ build: scripts/scrapers-muenster
+ # dockerfile: scripts/scrapers-muenster/Dockerfile
  command: ./scrape-loop-logstash.sh
  links:
    - logstash
+
+# scrapersdortmund:
+#  # image: codeformuenster/open-events_scrapers-dortmund
+#  build: scripts/scrapers-dortmund
+#  command: ./scrape-loop-logstash.sh
+#  links:
+#    - logstash

@@ -138,7 +138,46 @@ sub save_event {
 #	' );
 #	$sth->execute( $location_id, $IMP_SOURCE, $event->{title},$event->{datetime}, $event->{enddate}, $event->{md5}, $event->{link}, $event->{description}, $event->{image}, $event->{type} );
 
-	my $json = encode_json( $event );
+
+
+	my $event_schema_org = {
+		"\@context" => "http://schema.org",
+		"\@type" => "Event",
+		"name" => $event->{title},
+		"description" => $event->{description},
+		"location" => {
+			"\@type" => "Place",
+			"address" => {
+				"\@type" => "PostalAddress",
+				"streetAddress" => $event->{location}->{streetAddress},
+				"addressLocality" => $event->{location}->{addressLocality},
+				"postalCode" => $event->{location}->{postalCode}
+			},
+			"geo" => {
+				"\@type" => "GeoCoordinates",
+				"latitude" => $event->{location}->{latitude},
+				"longitude" => $event->{location}->{longitude}
+			}
+		},
+		"startDate" => $event->{datetime},
+		"url" => $event->{link},
+		"x_image" => $event->{image},
+		"x_type" => $event->{type},
+		"x_location" => $event->{location},
+
+		# "geo_point2" => ($event->{location}->{longitude}, $event->{location}->{latitude}),
+		# "geo_point3" => $event->{location}->{longitude}+", "+$event->{location}->{latitude}
+		# "geo_point2" => [$event->{location}->{longitude}, $event->{location}->{latitude}]
+	};
+
+	# if ( defined $event->{location}->{latitude} ) {
+	# 	$event_schema_org->{geo_point3} => {
+	# 		"lat" => $event->{location}->{latitude},
+	# 		"lon" => $event->{location}->{longitude}
+	# 	}
+	# };
+
+	my $json = encode_json( $event_schema_org );
 	print STDOUT $json . "\n";
 
 	return $result;
