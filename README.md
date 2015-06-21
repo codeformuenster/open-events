@@ -3,6 +3,14 @@ Open Events Database
 
 Hier die Eckpunkte, (copy and paste aus dem Forum.. http://forum.codeformuenster.org/t/open-calendar-offene-termindatenbank/109 )
 
+Geplante Features / ToDo
+* JSON API zum Einsenden von Terminen
+* JSON API zum Abholen von Terminen
+* Oauth Anmeldung für die JSON API
+* Termin-Eingabe-Formular prominent deployen :-)
+* "Termin-Suche": Beispiel-Webanwendung zum Termine suchen
+
+
 **Datastore**
 * Wir stellen erstmal hauptsächlich den Datenspeicher an sich zur Verfügung. Dort werden alle Events im JSON-Format gespeichert mit: 
  * Termin-Titel
