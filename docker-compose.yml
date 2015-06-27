@@ -1,8 +1,6 @@
 logstash:
-  build: logstash/
-  # image: local/logstash-filter-geocoder
-  # image: logstash:1.5
-  # command: logstash -f /logstash/conf/*.conf
+  # build: logstash/
+  image: codeformuenster/open-events_logstash
   command: bin/logstash -f /opt/logstash/conf/*.conf
   ports:
     - "7001:7001"
@@ -41,9 +39,8 @@ kibana:
 #     - logstash
 
 scrapersmuenster:
- # image: scrapersmuenster_scrapersmuenster
- build: scripts/scrapers-muenster
- # dockerfile: scripts/scrapers-muenster/Dockerfile
+ image: codeformuenster/open-events_scrapers-muenster
+ # build: scripts/scrapers-muenster
  command: ./scrape-loop-logstash.sh
  links:
    - logstash
