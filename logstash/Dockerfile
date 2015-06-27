@@ -10,6 +10,8 @@ WORKDIR /opt/logstash
 RUN curl -SL https://github.com/elastic/logstash/archive/$LOGSTASH_VERSION.tar.gz \
   | tar -xz -C /opt/logstash --strip-components 1
 
+RUN bin/plugin install --no-verify fingerprint
+
 RUN rake bootstrap \
   && bundle install --system --jobs 4
 
