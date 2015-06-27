@@ -18,6 +18,7 @@ elasticsearch:
     - elasticsearch/data:/usr/share/elasticsearch/data
   ports:
     - "9200:9200"
+  command: elasticsearch --http.cors.enabled=true
 
 kibana:
   image: webwurst/kibana
