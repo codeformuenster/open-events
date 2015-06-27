@@ -42,12 +42,16 @@
         9200
       ],
       "domains": {
-        "elasticsearch-cfm.gigantic.io": 9200
+        "test-elasticsearch-cfm.gigantic.io": 9200
       },
       "volumes": [{
         "path": "/usr/share/elasticsearch/data",
         "size": "2 GB"
-      }]
+      }],
+      "args": [
+        "elasticsearch",
+        "--http.cors.enabled=true"
+      ]
     }],
     "service_name": "elasticsearch"
   }, {
