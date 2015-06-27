@@ -12,15 +12,20 @@
             "type": "geo_point",
             "geohash_precision": "1m"
           },
-          /*"geo_point_geocoder": {
-            "type": "geo_point",
-            "geohash_precision": "1m"
-          },*/
-          "geo_point_geocoder_reverse": {
+          "geo_point_geocoder": {
             "type": "geo_point",
             "geohash_precision": "1m"
           },
+          /*"geo_point_geocoder_reverse": {
+            "type": "geo_point",
+            "geohash_precision": "1m"
+          },*/
           "geo_shape": {
+            "type": "geo_shape",
+            "tree": "quadtree",
+            "precision": "1m"
+          },
+          "geo_shape_geocoder": {
             "type": "geo_shape",
             "tree": "quadtree",
             "precision": "1m"
