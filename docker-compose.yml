@@ -1,6 +1,6 @@
 logstash:
-  image: local/logstash-filter-geocoder
-  # build: logstash/
+  build: logstash/
+  # image: local/logstash-filter-geocoder
   # image: logstash:1.5
   # command: logstash -f /logstash/conf/*.conf
   command: bin/logstash -f /opt/logstash/conf/*.conf
