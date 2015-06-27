@@ -1,6 +1,23 @@
-FROM logstash:1.5
-COPY conf /logstash/conf
+FROM jruby
 
-COPY local-plugins /logstash/local-plugins
-RUN /opt/logstash/bin/plugin install /logstash/local-plugins/logstash-filter-geocoder-0.1.0.gem
-RUN chown logstash /opt/logstash/.bundle/config -R
+WORKDIR /opt/logstash-filter-geocoder
+RUN curl -SL https://github.com/jsvd/logstash-filter-geocoder/archive/master.tar.gz \
+  | tar -xz -C /opt/logstash-filter-geocoder --strip-components 1
+
+ENV LOGSTASH_VERSION v1.5.1
+
+WORKDIR /opt/logstash
+RUN curl -SL https://github.com/elastic/logstash/archive/$LOGSTASH_VERSION.tar.gz \
+  | tar -xz -C /opt/logstash --strip-components 1
+
+RUN rake bootstrap \
+  && bundle install --system --jobs 4
+
+RUN echo 'gem "logstash-filter-geocoder", :path => "/opt/logstash-filter-geocoder"' \
+    >> Gemfile \
+  && bin/plugin install --no-verify
+
+RUN mkdir -p /opt/logstash/conf
+
+CMD ["bin/logstash", "-f", "/opt/logstash/conf/*.conf"]
+EXPOSE "7001"
