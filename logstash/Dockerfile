@@ -4,7 +4,7 @@ WORKDIR /opt/logstash-filter-geocoder
 RUN curl -SL https://github.com/jsvd/logstash-filter-geocoder/archive/master.tar.gz \
   | tar -xz -C /opt/logstash-filter-geocoder --strip-components 1
 
-ENV LOGSTASH_VERSION v1.5.1
+ENV LOGSTASH_VERSION v1.5.2
 
 WORKDIR /opt/logstash
 RUN curl -SL https://github.com/elastic/logstash/archive/$LOGSTASH_VERSION.tar.gz \
