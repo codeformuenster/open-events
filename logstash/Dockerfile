@@ -21,5 +21,7 @@ RUN echo 'gem "logstash-filter-geocoder", :path => "/opt/logstash-filter-geocode
 
 RUN mkdir -p /opt/logstash/conf
 
-CMD ["bin/logstash", "-f", "/opt/logstash/conf/*.conf"]
+COPY conf /opt/logstash/conf
+
+CMD ["bin/logstash", "-f", "conf/*.conf"]
 EXPOSE "7001"

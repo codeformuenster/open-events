@@ -7,5 +7,5 @@ do
   echo "scraping to logstash."
   node fzw-scraper.js | cat > test2.txt
   cat test2.txt | nc -q 30 logstash 7001
-  sleep 30
+  sleep 10800
 done

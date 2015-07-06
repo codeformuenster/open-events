@@ -161,9 +161,9 @@ sub save_event {
 		},
 		"startDate" => $event->{datetime},
 		"url" => $event->{link},
-		"x_image" => $event->{image},
-		"x_type" => $event->{type},
-		"x_location" => $event->{location},
+		# "x_image" => $event->{image},
+		# "x_type" => $event->{type},
+		# "x_location" => $event->{location},
 
 		# "geo_point2" => ($event->{location}->{longitude}, $event->{location}->{latitude}),
 		# "geo_point3" => $event->{location}->{longitude}+", "+$event->{location}->{latitude}

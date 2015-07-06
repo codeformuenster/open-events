@@ -14,7 +14,7 @@ use JSON qw( encode_json decode_json );
 use Try::Tiny;
 
 # global fb auth token
-my $token ;
+my $token = "498459953cc4d3342d64724e93517019";
 
 
 

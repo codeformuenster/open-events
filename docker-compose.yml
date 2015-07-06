@@ -25,12 +25,12 @@ kibana:
   links:
     - elasticsearch
 
-# eventinputform:
-#   image: codeformuenster/open-events_event-input-form
-#   ports:
-#     - "5000:5000"
-#   links:
-#     - logstash
+eventinputform:
+  image: codeformuenster/open-events_event-input-form
+  ports:
+    - "5000:5000"
+  links:
+    - logstash
 
 # parkleitsystemapi:
 #   image: codeformuenster/parkleitsystemapi
@@ -39,8 +39,8 @@ kibana:
 #     - logstash
 
 scrapersmuenster:
- image: codeformuenster/open-events_scrapers-muenster
- # build: scripts/scrapers-muenster
+ # image: codeformuenster/open-events_scrapers-muenster
+ build: scripts/scrapers-muenster
  command: ./scrape-loop-logstash.sh
  links:
    - logstash

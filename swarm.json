@@ -44,10 +44,6 @@
       "domains": {
         "test-elasticsearch-cfm.gigantic.io": 9200
       },
-      "volumes": [{
-        "path": "/usr/share/elasticsearch/data",
-        "size": "2 GB"
-      }],
       "args": [
         "elasticsearch",
         "--http.cors.enabled=true"
@@ -57,9 +53,9 @@
   }, {
     "components": [{
       "args": [
-        "logstash",
+        "/opt/logstash/bin/logstash",
         "-f",
-        "/logstash/conf/*.conf"
+        "/opt/logstash/conf/*.conf"
       ],
       "component_name": "logstash",
       "dependencies": [{
