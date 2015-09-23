@@ -10,5 +10,15 @@
     "name": "mysql-event",
     "connector": "mysql",
     "user": ""
+  },
+  "elastic-event": {
+    "host": "127.0.0.1",
+    "port": "9200",
+    "name": "elastic-event",
+    "connector": "elastic-search",
+    "log": "trace",
+    "defaultSize": "Rows",
+    "index": "events",
+    "type": "eveng"
   }
 }

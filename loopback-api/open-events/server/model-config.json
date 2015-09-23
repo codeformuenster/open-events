@@ -35,5 +35,9 @@
   "event": {
     "dataSource": "mysql-event",
     "public": true
+  },
+  "elastic-event": {
+    "dataSource": "elastic-event",
+    "public": true
   }
 }
