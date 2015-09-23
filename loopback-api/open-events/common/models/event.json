@@ -1,0 +1,42 @@
+{
+  "name": "event",
+  "plural": "events",
+  "base": "PersistedModel",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "event_id": {
+      "type": "number",
+      "generated": true, 
+      "id": true
+    },
+    "event_title": {
+      "type": "string",
+      "required": true
+    },
+    "event_datetime": {
+      "type": "date",
+      "required": true
+    },
+    "event_link": {
+      "type": "string"
+    },
+    "event_description": {
+      "type": "string"
+    },
+    "event_type": {
+      "type": "string"
+    },
+    "event_enddate": {
+      "type": "date"
+    }
+  },
+  "scope": {
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

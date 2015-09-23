@@ -1,9 +1,9 @@
 logstash:
-  image: local/logstash-filter-geocoder
+#  image: local/logstash-filter-geocoder
   # build: logstash/
-  # image: logstash:1.5
+  image: logstash:1.5
   # command: logstash -f /logstash/conf/*.conf
-  command: bin/logstash -f /opt/logstash/conf/*.conf
+  command: /opt/logstash/bin/logstash -f /opt/logstash/conf/*.conf
   ports:
     - "7001:7001"
   volumes:
@@ -39,13 +39,13 @@ kibana:
 #   links:
 #     - logstash
 
-scrapersmuenster:
- # image: scrapersmuenster_scrapersmuenster
- build: scripts/scrapers-muenster
- # dockerfile: scripts/scrapers-muenster/Dockerfile
- command: ./scrape-loop-logstash.sh
- links:
-   - logstash
+#scrapersmuenster:
+# # image: scrapersmuenster_scrapersmuenster
+# build: scripts/scrapers-muenster
+# # dockerfile: scripts/scrapers-muenster/Dockerfile
+# command: ./scrape-loop-logstash.sh
+# links:
+#   - logstash
 
 # scrapersdortmund:
 #  # image: codeformuenster/open-events_scrapers-dortmund
