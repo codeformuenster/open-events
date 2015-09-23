@@ -410,7 +410,10 @@ use constant {
 			my $cfg = shift;
 			my $fbId = $cfg->val( 'fb', 'id' );
 			my $fbSc = $cfg->val( 'fb', 'sc' );
-			return [] unless ( $fbId && $fbSc );
+			if (! ( $fbId && $fbSc ) ) {
+				log_error("Facebook id and secret not found. Did you fill out your app.ini file? Skipping location.");
+				return [];
+			}
 
 			# get auth token
 			unless ( $token ) {
@@ -440,6 +443,8 @@ use constant {
 						log_error("DID NOT GET FB ACCESS TOKEN, DUDE!!");
 					}
 				}
+			} else {
+				log_info("Did not get facebook access token. Did you fill out your app.ini file correctly? Skipping location.");
 			}
 			my $fb_url = '';
 			if ($url =~ m#^https://www.facebook.com/([^/]+)/?$#i ) {
