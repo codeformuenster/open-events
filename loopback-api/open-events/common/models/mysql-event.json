@@ -1,40 +1,37 @@
 {
-  "name": "event",
-  "plural": "events",
+  "name": "mysql-event",
+  "plural": "mysql-events",
   "base": "PersistedModel",
   "idInjection": false,
   "options": {
     "validateUpsert": true
   },
+  "scope": {},
   "properties": {
-    "id": {
-      "type": "string",
+    "event_id": {
+      "type": "number",
       "id": true,
       "generated": true
     },
-    "name": {
+    "event_title": {
       "type": "string",
       "required": true
     },
-    "startDate": {
+    "event_datetime": {
       "type": "date",
       "required": true
     },
-    "description": {
+    "event_link": {
       "type": "string"
     },
-    "url": {
-      "type": "string",
-      "required": true
+    "event_description": {
+      "type": "string"
     },
-    "geo": {
-      "type": "geopoint"
-    },  
-    "@type": {
-      "type": "String"
+    "event_type": {
+      "type": "string"
     },
-    "location": {
-      "type": "object"
+    "event_enddate": {
+      "type": "date"
     }
   },
   "validations": [],

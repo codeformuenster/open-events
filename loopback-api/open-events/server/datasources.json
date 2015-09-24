@@ -19,6 +19,6 @@
     "log": "trace",
     "defaultSize": "Rows",
     "index": "events",
-    "type": "eveng"
+    "type": "event"
   }
 }

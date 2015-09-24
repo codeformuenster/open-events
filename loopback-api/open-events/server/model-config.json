@@ -32,11 +32,11 @@
     "dataSource": "db",
     "public": false
   },
-  "event": {
+  "mysql-event": {
     "dataSource": "mysql-event",
-    "public": true
+    "public": false
   },
-  "elastic-event": {
+  "event": {
     "dataSource": "elastic-event",
     "public": true
   }
