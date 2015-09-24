@@ -20,12 +20,19 @@
       "type": "date",
       "required": true
     },
+    "endDate": {
+      "type": "date",
+      "required": true
+    },
     "description": {
       "type": "string"
     },
     "url": {
       "type": "string",
       "required": true
+    },
+    "image": {
+      "type": "string"
     },
     "geo": {
       "type": "geopoint"
@@ -35,6 +42,12 @@
     },
     "location": {
       "type": "object"
+    },
+    "source": {
+      "type": "object"
+    },
+    "@context": {
+      "type": "string"
     }
   },
   "validations": [],
