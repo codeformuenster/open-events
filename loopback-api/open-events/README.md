@@ -6,11 +6,18 @@
 2. Install node modules: `cd loopback-api/open-events;npm install`
 3. `npm install loopback-connector-elastic-search --save`
 
-## Run
+## Run development version
 
 Just as you would with any node application: 
 `cd loopback-api/open-events;node .`
 
+# Deploy to production
+
+```bash
+npm install pm2 -g
+pm2 start .
+```
+..then it will be running on port 3000. 
 
 ## About the data
 
