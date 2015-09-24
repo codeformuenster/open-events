@@ -1,0 +1,41 @@
+{
+  "name": "mysql-event",
+  "plural": "mysql-events",
+  "base": "PersistedModel",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "scope": {},
+  "properties": {
+    "event_id": {
+      "type": "number",
+      "id": true,
+      "generated": true
+    },
+    "event_title": {
+      "type": "string",
+      "required": true
+    },
+    "event_datetime": {
+      "type": "date",
+      "required": true
+    },
+    "event_link": {
+      "type": "string"
+    },
+    "event_description": {
+      "type": "string"
+    },
+    "event_type": {
+      "type": "string"
+    },
+    "event_enddate": {
+      "type": "date"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

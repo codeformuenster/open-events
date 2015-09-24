@@ -54,7 +54,7 @@ my $locations = decode_json( $jsonfile );
 
 # parse events from each location page
 for my $row ( @$locations) {
-	log_debug( "parsing", $row );
+	log_debug( "parsing source:", $row->{source_id}, ", location_id:", $row->{location_id}, $row->{parser} );
 	if ( (!$parse_only ) || ( $parse_only && ( $row->{parser} eq $parse_only)  ) || ( $parse_only && ( $row->{source_id} eq $parse_only )  )  ) {
 		log_info( "===========================>",$row->{parser},"terminseite location:", $row->{location_id}, "source:", $row->{source_id}, $row->{source_url});
 		parse_terminseite( $row );

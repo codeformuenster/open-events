@@ -1,0 +1,57 @@
+{
+  "name": "event",
+  "plural": "events",
+  "base": "PersistedModel",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "id": {
+      "type": "string",
+      "id": true,
+      "generated": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "startDate": {
+      "type": "date",
+      "required": true
+    },
+    "endDate": {
+      "type": "date",
+      "required": true
+    },
+    "description": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "image": {
+      "type": "string"
+    },
+    "geo": {
+      "type": "geopoint"
+    },  
+    "@type": {
+      "type": "String"
+    },
+    "location": {
+      "type": "object"
+    },
+    "source": {
+      "type": "object"
+    },
+    "@context": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
