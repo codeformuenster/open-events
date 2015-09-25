@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="en-gb" dir="ltr">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Open Events - Regionale Termine aus ganz Deutschland - kostenfrei - offen für alle - open source</title>
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon-precomposed" href="images/apple-touch-icon.png">
+        <link rel="stylesheet" href="/uikit/css/uikit.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="/uikit/js/uikit.min.js"></script>
+        <style>
+        .contactbutton {display:block;margin-top:10px;margin-bottom:10px; }
+        .contrib-image { width:350px;height:150px;overflow:hidden; }
+        .contrib-gray {background-color:#ccc;}
+        .uk-grid-divider.wider {margin-top: 50px;margin-bottom: 60px;}
+        /* footer */
+        .tm-footer .uk-subnav-line > li:before { border-color: #ddd; }
+        .tm-footer,
+        .tm-footer a { color: #ddd !important; }
+        .tm-footer a:hover { color: #fff !important; }
+        .tm-footer {background-color: rgb(37, 37, 37);}
+        .tm-middle,
+        .tm-section,
+        .tm-footer { padding: 50px 0; }
+
+        /* Tablet and bigger */
+        @media (min-width: 768px) {
+
+            .tm-middle,
+            .tm-section,
+            .tm-footer { padding: 90px 0; }
+
+        }
+
+        /* Large screen and bigger */
+        @media (min-width: 1220px) {
+
+            .tm-middle,
+            .tm-section,
+            .tm-footer { padding: 120px 0; }
+
+        }
+
+
+        </style>
+    </head>
+
+    <body>
+
+        <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+
+            <nav class="uk-navbar uk-margin-large-bottom">
+                <a class="uk-navbar-brand uk-hidden-small" href="#"><i class="uk-icon-calendar-o"></i> Open Events</a>
+                <ul class="uk-navbar-nav uk-hidden-small">
+                    <li>
+                        <a href="#mitmachen">Kontakt</a>
+                    </li>
+                    <li>
+                        <a href="http://events-api.input23.de/explorer/"><i class="uk-icon-external-link"></i> Termine JSON API</a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://github.com/codeformuenster/open-events"><i class="uk-icon-external-link"></i> Quellcode</a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://github.com/codeformuenster/open-events/issues"><i class="uk-icon-external-link"></i> Issues</a>
+                    </li>
+
+                    <li>
+                        <a target="_blank" href="https://waffle.io/codeformuenster/open-events"><i class="uk-icon-external-link"></i> Roadmap</a>
+                    </li>
+                </ul>
+                <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas></a>
+                <div class="uk-navbar-brand uk-navbar-center uk-visible-small">Open Events</div>
+            </nav>
+
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-1">
+
+                    <div class="uk-vertical-align uk-text-center" style="background: url('/images/clock.jpg')100% 0 no-repeat; height: 450px;">
+                        <div class="uk-vertical-align-middle uk-width-1-2">
+                            <h1 class="uk-heading-large"><i class="uk-icon-calendar-o uk-icon-large "></i> <br />Open Events</h1>
+                            <p class="uk-text-large"><b>Regionale Termine aus ganz Deutschland</b><br />kostenfrei - offen für alle - open source</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-3">
+                    <div class="uk-grid">
+                        <div class="uk-width-1-6">
+                            <i class="uk-icon-cog uk-icon-large uk-text-primary"></i>
+                        </div>
+                        <div class="uk-width-5-6">
+                            <h2 class="uk-h3">Kostenlose Nutzung</h2>
+                            <p>Das Eintragen und Abrufen von Terminen soll für die Nutzer kostenfrei sein. </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-width-medium-1-3">
+                    <div class="uk-grid">
+                        <div class="uk-width-1-6">
+                            <i class="uk-icon-cloud-download uk-icon-large uk-text-primary"></i>
+                        </div>
+                        <div class="uk-width-5-6">
+                            <h2 class="uk-h3">Freie Schnittstelle</h2>
+                            <p>Jeder kann Termine über unsere offene JSON-API-Schnittstelle abrufen und/oder neue Termine übermitteln.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uk-width-medium-1-3">
+                    <div class="uk-grid">
+                        <div class="uk-width-1-6">
+                            <i class="uk-icon-database uk-icon-large uk-text-primary"></i>
+                        </div>
+                        <div class="uk-width-5-6">
+                            <h2 class="uk-h3">Open Source Technik</h2>
+                            <p>Unsere Platform basiert auf moderner Open-Source-Technik: Docker, Elasticsearch und Node.js.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="uk-grid-divider wider">
+
+            <div class="uk-grid" data-uk-grid-margin>
+
+                <div class="uk-width-medium-1-2">
+                    <img width="660" height="400" src="/images/bird.jpg" alt="">
+                </div>
+
+                <div class="uk-width-medium-1-2">
+                    <h1>Hintergrundstory</h1>
+                    <p>Es fing an damit, dass es in Münster relativ schwer ist, einen kompletten Überblick über aktuelle Freizeitaktivitäten zu bekommen. Z.B. Stadtfeste, Flohmärkte, Parties, ... Alles ist über zig verschiedene Internetseiten verteilt. Ständig hat man etwas verpasst.</p>
+                    <p>Bei Gesprächen mit verschiedenen Menschen aus anderen Regionen stellte sich heraus, dass dieses Problem überregional auch in anderen Städten besteht.</p>
+                    <h2>Lösung: Eine Internetportal, das alle Termine sammelt</h2>
+                    <p>Daher entstand bei <a href="http://www.codeformuenster.org">CodeForMünster</a> die Idee, eine Opensource Termindatenbank zu bauen, in die jeder kostenlos Termine einpflegen und auslesen kann. Über eine einfach zu nutzende offene JSON-API ermöglichen wir die Nutzung für eine große Bandbreite an Zielgruppen, vom Web-Profi, über Designer bis zum Hobby-Programmierer. Jeder kann sich seine eigene Termin-Seite bauen. Sei es ein Stadtportal oder eine Termin-Liste für die Homepage.</p>
+                </div>
+
+            </div>
+
+            <hr class="uk-grid-divider wider">
+
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-2">
+                    <a name="mitmachen"></a>
+                    <h1>Mitmachen / Kontakt</h1>
+                    <p>Wir freuen uns über jeden, der uns bei der technischen und inhaltlichen Umsetzung unseres Projekts helfen möchte. Wir nutzen zur Kommunikation einen Slack-Channel. Du musst nicht im Münsterland wohnen, um mitzuhelfen. <b>Wenn Du mitmachen möchtest, sprich uns über unseren Slack Channel von CodeForMünster an:</b>
+
+                    <a class="contactbutton uk-button uk-button-primary" target="_blank" href="http://slackin.codeformuenster.org/">Anmelden zum Slack Channel von CodeForMünster</a>
+
+                    Du kannst natürlich auch einfach unseren SourceCode auf GitHub auschecken, um am Projekt mitzuprogrammieren.
+
+                    <a class="contactbutton uk-button uk-button-primary" target="_blank" href="https://github.com/codeformuenster/open-events">Zur GitHub Seite des Open Events Projekts</a>
+
+                    Oder besuche uns auf einem unserer Treffen. Der nächste Termin wird auf der CodeForMünster-Homepage angekündigt:
+                    <a class="contactbutton uk-button uk-button-primary" target="_blank" href="http://codeformuenster.org/">Zur Homepage von CodeForMünster</a>
+
+                     </p>
+                </div>
+
+                <div class="uk-width-medium-1-2">
+                    <img width="660" height="400" src="/images/karate.jpg" alt="">
+                </div>
+            </div>
+
+            <hr class="uk-grid-divider wider">
+
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-1">
+                    <div class="uk-panel uk-panel-box uk-text-center">
+                        <p><strong>Wenn Sie als Veranstalter ihre Termine überregional bewerben möchten, kontaktieren Sie uns hier:</strong> <a class="uk-button uk-button-primary uk-margin-left" target="_blank" href="http://goo.gl/forms/IjQb9hkdYT">Kontaktformular</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="uk-text-center">Contributors</h1>
+
+            <div id="contributors" class="uk-grid" data-uk-grid-margin>
+              
+            </div>
+
+        </div>
+
+        <div id="offcanvas" class="uk-offcanvas">
+            <div class="uk-offcanvas-bar">
+                <ul class="uk-nav uk-nav-offcanvas">
+                    <li class="uk-active">
+                        <a href="#mitmachen">Kontakt</a>
+
+                    </li>
+                    <li>
+                        <a href="http://events-api.input23.de/explorer/"><i class="uk-icon-external-link"></i> Termine JSON API</a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://github.com/codeformuenster/open-events"><i class="uk-icon-external-link"></i> Quellcode</a>
+
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://github.com/codeformuenster/open-events/issues"><i class="uk-icon-external-link"></i> Issues</a>
+
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://waffle.io/codeformuenster/open-events"><i class="uk-icon-external-link"></i> Roadmap</a>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    <a href="https://github.com/codeformuenster/open-events"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<script type="text/javascript">
+function showContributor( contributor ) {
+    console.log(contributor);
+    $("#contributors").append('<div class="uk-width-1-4 uk-width-medium-1-6 uk-width-large-1-6">'+
+        '<figure class="uk-overlay uk-overlay-hover contrib-gray">'+ ( contributor.avatar_url ? '<img width="150" src="'+contributor.avatar_url+'">' 
+                : '<img width="150" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO4/R8AArgB255xVG4AAAAASUVORK5CYII=">' )+
+           '<figcaption class="uk-overlay-panel uk-overlay-background uk-overlay-fade uk-flex uk-flex-center uk-flex-middle uk-text-center"><div>'+contributor.login+'<br />'+( contributor.contributions?contributor.contributions+' points':"")+'</div>'+
+            '</figcaption><a class="uk-position-cover" href="'+contributor.html_url+'"></a></figure></div>'
+    );
+}
+
+function foo(response) {
+    var data = response.data;
+    var total = 0;
+    for (var nr in data) {
+        var contributor = data[nr];
+        showContributor( contributor );
+        total ++;
+    }
+    var more = 6- (total %6 ) ;
+    if ( more ) {
+        for ( var i = 0 ; i < more ; i++ ) {
+            showContributor( { login: "Dieser Platz ist noch frei!" });        
+        }
+    }
+}
+var script = document.createElement('script');
+script.src = 'https://api.github.com/repos/codeformuenster/open-events/contributors?callback=foo';
+document.getElementsByTagName('head')[0].appendChild(script);
+</script>
+
+
+
+        <div class="tm-footer">
+            <div class="uk-container uk-container-center uk-text-center">
+
+                <ul class="uk-subnav uk-subnav-line uk-flex-center">
+                    <li><a href="https://github.com/codeformuenster/open-events">GitHub</a></li>
+                    <li><a href="https://github.com/codeformuenster/open-events/issues">Issues</a></li>
+                    <li><a href="https://github.com/codeformuenster/open-events/graphs/contributors">Aktivitätsgraph</a></li>
+                    <li><a href="https://twitter.com/getuikit">Twitter</a></li>
+                </ul>
+
+                <div class="uk-panel">
+                    <p>Fotos von <a href="http://www.gratisography.com/">gratisography.com</a>.</p>
+                    <a href="http://codeformuenster.org"><img src="http://codeformuenster.org/img/cfm_logo.png"></a>
+                </div>
+
+            </div>
+        </div>
+
+
+    </body>
+</html>
