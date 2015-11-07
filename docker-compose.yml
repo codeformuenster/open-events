@@ -1,26 +1,30 @@
-logstash:
-#  image: local/logstash-filter-geocoder
-  # build: logstash/
-  image: logstash:1.5
-  # command: logstash -f /logstash/conf/*.conf
-  command: /opt/logstash/bin/logstash -f /opt/logstash/conf/*.conf
-  ports:
-    - "7001:7001"
-  volumes:
-    - logstash/conf:/opt/logstash/conf
-  links:
-    - elasticsearch
-
 elasticsearch:
-  image: elasticsearch:1.6
-  volumes:
-    - elasticsearch/config/templates:/usr/share/elasticsearch/config/templates
-    - elasticsearch/data:/usr/share/elasticsearch/data
+  image: elasticsearch:latest
+  command: elasticsearch -Des.network.host=0.0.0.0
   ports:
     - "9200:9200"
+#  volumes:
+#   add this if you want to persist your data on the host system
+#    - /path/to/storage:/usr/share/elasticsearch/data
+#   add this for your own elasticsearch configuration
+#   - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+
+
+#logstash:
+#  image: logstash:latest
+#  command: logstash -f /etc/logstash/conf.d/logstash.conf
+#  volumes:
+#    - ./logstash/config:/etc/logstash/conf.d
+#  ports:
+#    - "5000:5000"
+#  links:
+#    - elasticsearch
+
 
 kibana:
-  image: webwurst/kibana
+  build: kibana/
+  volumes:
+    - ./kibana/config/kibana.yml:/opt/kibana/config/kibana.yml
   ports:
     - "5601:5601"
   links:
