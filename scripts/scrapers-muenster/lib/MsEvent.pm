@@ -115,10 +115,6 @@ sub save_event {
 	if ( !( $event->{link} || $event->{description} ) ) {
 		return event_error( -1,"EVENT NEEDS LINK OR DESCRIPTION", $event );
 	}
-	if ( !$location_id ) {
-		log_error("ERROR, NO LOCATION ID", $event );
-		die();
-	}
 
 	my $result = 1;
 #	my $sth = $dbh->prepare( 'SELECT event_id FROM event WHERE event_md5 = ?' );
@@ -140,27 +136,28 @@ sub save_event {
 
 
 
-	my $event_schema_org = {
-		"\@context" => "http://schema.org",
-		"\@type" => "Event",
-		"name" => $event->{title},
-		"description" => $event->{description},
-		"location" => {
-			"\@type" => "Place",
-			"address" => {
-				"\@type" => "PostalAddress",
-				"streetAddress" => $event->{location}->{streetAddress},
-				"addressLocality" => $event->{location}->{addressLocality},
-				"postalCode" => $event->{location}->{postalCode}
-			},
-			"geo" => {
-				"\@type" => "GeoCoordinates",
-				"latitude" => $event->{location}->{latitude},
-				"longitude" => $event->{location}->{longitude}
-			}
-		},
-		"startDate" => $event->{datetime},
-		"url" => $event->{link},
+	# my $event_schema_org = {
+	# 	"\@context" => "http://schema.org",
+	# 	"\@type" => "Event",
+	# 	"name" => $event->{title},
+	# 	"description" => $event->{description},
+	# 	"location" => {
+	# 		"\@type" => "Place",
+	# 		"address" => {
+	# 			"\@type" => "PostalAddress",
+	# 			"streetAddress" => $event->{location}->{streetAddress},
+	# 			"addressLocality" => $event->{location}->{addressLocality},
+	# 			"postalCode" => $event->{location}->{postalCode}
+	# 		},
+	# 		"geo" => {
+	# 			"\@type" => "GeoCoordinates",
+	# 			"latitude" => $event->{location}->{latitude},
+	# 			"longitude" => $event->{location}->{longitude}
+	# 		}
+	# 	},
+	# 	"startDate" => $event->{datetime},
+	# 	"url" => $event->{link},
+
 		# "x_image" => $event->{image},
 		# "x_type" => $event->{type},
 		# "x_location" => $event->{location},
@@ -168,7 +165,7 @@ sub save_event {
 		# "geo_point2" => ($event->{location}->{longitude}, $event->{location}->{latitude}),
 		# "geo_point3" => $event->{location}->{longitude}+", "+$event->{location}->{latitude}
 		# "geo_point2" => [$event->{location}->{longitude}, $event->{location}->{latitude}]
-	};
+	# };
 
 	# if ( defined $event->{location}->{latitude} ) {
 	# 	$event_schema_org->{geo_point3} => {
@@ -177,7 +174,7 @@ sub save_event {
 	# 	}
 	# };
 
-	my $json = encode_json( $event_schema_org );
+	my $json = encode_json( $event );
 	print STDOUT $json . "\n";
 
 	return $result;

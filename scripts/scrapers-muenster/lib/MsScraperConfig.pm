@@ -59,19 +59,19 @@ my $token ;
 use constant {
 	TRANSFORMATORS => {
 		conny_kramer => sub {
-			my $url = shift;
-			log_debug("run", $url );
+			my $url = 'http://www.connykramer.ms';
 			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
-			log_debug("html", $html );
+
 			my $events = [];
 			my $nodes = $html->findnodes( '//div[@class="boxRight"]');
 			for my $node ( @$nodes ) {
 				my $event = {
 					title => $node->findvalue('h2'),
-					link => 'http://www.connykramer.ms',
+					link => $url,
 					description => $node->findvalue('div[@class="info"]' ),
 					image => "",
-					type => 'disco'
+					type => 'disco',
+					source_url => $url
 				};
 
 				my $datetime = $node->findvalue('h1');
@@ -83,7 +83,6 @@ use constant {
 					}
 				}
 				push @$events, $event;
-				#log_debug("got event", $event );
 			}
 			$html->delete;
 			return $events;
@@ -103,9 +102,11 @@ use constant {
 # 	</p>
 # </div>
 
-		muenster => sub {
+		muenster_old => sub {
 			my $url = shift;
 			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
+			log_debug("muenser html ", $url );
+			die();
 
 			my $events = [];
 			my $nodes = $html->findnodes( '//div[@class="termin"]');
@@ -119,7 +120,8 @@ use constant {
 					link => $node->findvalue('h3/a/@href'),
 					description => $desc,
 					image => $node->findvalue('img/@src'),
-					type => 'muenster'
+					type => 'muenster',
+					featured => 1
 				};
 				push @$events, $event;
 			}
@@ -127,8 +129,55 @@ use constant {
 			return $events;
 		},
 
+		# <div class="eintrag">
+		# 	<div class="zeitraum">
+		# 		24.10.2015 - 1.11.2015					</div>
+		# 	<div class="beschreibung">
+		# 		<!--
+		# 		<div class="foto"> <!-- dieser Bereich kann über den Titel geschoben werden um Foto auf Höhe der Überschrift zu haben -->
+		# 		<!--	<img src="css/images/grueffelo.jpg" />
+		# 		</div>
+		# 		-->
+		# 		<div class="titel">
+		# 			Herbstsend						</div>
+		# 		<div class="untertitel">
+		# 			M&uuml;nsters gr&ouml;&szlig;tes Volksfest						</div>
+		# 		<div class="top-veranstaltung-kurztext">
+		# 			Die gr&ouml;&szlig;te Kirmes des M&uuml;nsterlandes: Schaustellerbetriebe aus der gesamten Bundesrepublik pr&auml;sentieren Nostalgisches ebenso wie die neuesten Fahrgesch&auml;fte.															<a href="http://www.muenster.de/veranstaltungskalender/scripts/frontend/mm/top-veranstaltung.php?id=3168&amp;guestID=101" class="intern">Details</a>
+		# 		</div>
+		# </div>
+
+		muenster => sub {
+			my $url = 'http://www.muenster.de/stadt/tourismus/veranstaltungen.html';
+			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
+			my $events = [];
+			my $nodes = $html->findnodes( '//div[@class="eintrag"]');
+			for my $node ( @$nodes ) {
+				my $title = $node->findvalue('div[@class="beschreibung"]/div[@class="titel"]');
+				my $subt = $node->findvalue('div[@class="beschreibung"]/div[@class="untertitel"]');
+				if ( $subt =~ /[a-z]/i ) {
+					$title .= " - ". $subt;
+				}
+				my $desc = $node->findvalue('div[@class="beschreibung"]/div[@class="top-veranstaltung-kurztext"]');
+				$desc =~ s/mehr\.\.\.//g;
+				my $event = {
+					parsedate => $node->findvalue('div[@class="zeitraum"]'),
+					title => $title,
+					link => $node->findvalue('div[@class="beschreibung"]/div[@class="top-veranstaltung-kurztext"]/a[@class="intern"]/@href'),
+					description => $desc,
+					image => $node->findvalue('div[@class="beschreibung"]/div[@class="foto"]/img/@src'),
+					type => 'muenster',
+					source_url => $url
+				};
+				push @$events, $event;
+			}
+			$html->delete;
+			return $events;
+		},
+
+
 		gleis22 => sub {
-			my $url = shift;
+			my $url = "http://www.gleis22.de/programmuebersicht.php";
 			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
 
 			my $events = [];
@@ -152,14 +201,15 @@ use constant {
 						}
 					}
 				}
-
+				my $date = $node->findvalue('td[@width="60"]');
 				my $event = {
-					parsedate => $node->findvalue('td[@width="60"]'),
+					parsedate => $date,
 					title => $title,
 					link => 'http://www.gleis22.de',
 					description => $description,
 					image => "",
-					type => $type
+					type => $type,
+					md5 => $date.$title
 				};
 				if ( $title =~ /sentier/) {
 					$event->{type} = 'konzert';
@@ -176,7 +226,7 @@ use constant {
 		#  	<a href="http://www.uni-muenster.de/HausDerNiederlande/veranstaltungen/ws1415/detail.shtml?id=000127" class="int" rel="internal"><strong>Stefan Brijs: Post für Mrs. Bromley</strong></a>
 		#  	</p>
 		haus_der_nl => sub {
-			my $url = shift;
+			my $url = 'http://www.uni-muenster.de/HausDerNiederlande/veranstaltungen/';
 			my $events = [];
 			my $content = get( $url );
 			my @matches = $content =~ /(<p\s+lang="de-de".*?<\/p>)/imsg;
@@ -253,7 +303,7 @@ use constant {
   #               <hr />
   #           </dd>
 		lwl_museum => sub {
-			my $url = shift;
+			my $url = 'http://www.lwl.org/LWL/Kultur/museumkunstkultur/programm/kalender/';
 			my $events = [];
 			my $content = get( $url );
 			my @matches = $content =~ /(<dt>.*?<\/dd>)/imsg;
@@ -341,6 +391,70 @@ use constant {
 
 
 
+# 	<div id="events">
+#     <ul>
+#     	        <li>
+#         <div>
+#         	<div class="container">
+        #
+#                 <div class="top">
+#                 	<div class="row">
+                    	#
+#                         <div class="col-sm-5">
+#                             <div class="image">
+#                             	<div>
+#                                 	<img src="http://www.jovel.de/media/jovel/images/0422.png" alt="" class="grey" /><img src="http://www.jovel.de/media/jovel/images/0422.png" alt="" />                               	</div>
+#                             </div>
+#                         </div>
+                        #
+#                         <div class="col-sm-7">
+                        #
+#                             <h2>Beer Pong  Meisterschaft + Semesterstartparty - F&Auml;LLT AUS</h2>
+#                             <div class="info">
+#                                 Mi, 22.04, 00:00 Uhr<br />
+#                                 <span style="color:#009ee3">Music Hall</span>                            </div>
+                            #
+#                             <div class="text">
+#                             	                                <p><strong>Die geplante Beer Pong Meisterschaft und Semesterstartparty f&auml;llt leider aus.</strong></p>
+# <p><strong>Eine Verlegung auf einen sp&auml;teren Zeitpukt ist in Planung.</strong></p>
+#                                 <div class="clearfix"></div>
+                                #
+#                                 <a class="btn btn-default" data-toggle="modal" data-target="#modal246462">Details</a>
+#                             </div>
+                        #
+#                         </div>
+                    #
+#                     </div>
+#                 </div>
+            #
+#             </div>
+#         </div>
+#         </li>
+
+		jovel => sub {
+			my $url = shift;
+			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
+			my $events = [];
+			my $nodes = $html->findnodes('//div[@id="events"]/ul/li/div/div[@class="container"]' );
+			log_debug("found nodes", scalar @$nodes );
+			for my $node ( @$nodes ) {
+				#log_debug("adding event", $node );
+				my $event = {
+					title => $node->findvalue('div/div/div[@class="col-sm-7"]/h2'),
+					link => 'http://www.jovel.de/veranstaltungen/',
+					description => $node->findvalue('div/div/div[@class="col-sm-7"]/div[@class="text"]'),
+				};
+				my $datum = $node->findvalue('div/div/div[@class="col-sm-7"]/div[@class="info"]');
+				if ( $datum =~ /\w\w,\s*(\d\d?)\.(\d{1,2}),\s*(\d\d:\d\d)/i ) {
+					$event->{parsedate} = $1.'.'.$2.'.';
+					$event->{parsetime} = $3;
+				}
+				$event->{md5} = $event->{parsedate} . $event->{parsetime};
+				$event->{source_url} = $url;
+				push @$events, $event;
+			}
+			return $events;
+		},
 
 # <div id="post-3185" class="hentry vevent type-tribe_events post-3185 tribe-clearfix tribe-events-category-session tribe-events-venue-183 tribe-events-organizer-182 hentry vevent type-tribe_events tribe-clearfix ">
 # <!-- Event Image -->
@@ -367,7 +481,7 @@ use constant {
 
 
 		hotjazzclub  => sub {
-			my $url = shift;
+			my $url = 'http://www.hotjazzclub.de/programm/';
 			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
 			log_debug("tree built for url", $url );
 			my $events = [];
