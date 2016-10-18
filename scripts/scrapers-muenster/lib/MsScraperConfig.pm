@@ -88,47 +88,6 @@ use constant {
 			return $events;
 		},
 
-
-# <div class="termin">
-	#
-# 	<img src="http://www5.stadt-muenster.de/mm_internet/bilder/v_send3.jpg" border="0" alt="Illustration">
-	#
-# 	<p class="datum"><strong>18.04.2015 - 26.04.2015</strong></p>
-# 	<h3><a href="http://www5.stadt-muenster.de/mm/vk_detail.cfm?v_id=122989&highlight=1">Frühjahrssend</a></h3>
-# 	<p>
-# 	<strong>Münsters größtes Volksfest</strong><br>
-# 	Die größte Kirmes des Münsterlandes: Schaustellerbetriebe aus der gesamten Bundesrepublik präsentieren Nostalgisches ebenso wie die neuesten Fahrgeschäfte. <br>
-# 	<a href="http://www5.stadt-muenster.de/mm/vk_detail.cfm?v_id=122989&highlight=1" title="mehr über 'Frühjahrssend'">mehr...</a>
-# 	</p>
-# </div>
-
-		muenster_old => sub {
-			my $url = shift;
-			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
-			log_debug("muenser html ", $url );
-			die();
-
-			my $events = [];
-			my $nodes = $html->findnodes( '//div[@class="termin"]');
-			for my $node ( @$nodes ) {
-				my $title = $node->findvalue('h3/a');
-				my $desc = $node->findvalue('p[2]');
-				$desc =~ s/mehr\.\.\.//g;
-				my $event = {
-					parsedate => $node->findvalue('p[@class="datum"]/strong'),
-					title => $title,
-					link => $node->findvalue('h3/a/@href'),
-					description => $desc,
-					image => $node->findvalue('img/@src'),
-					type => 'muenster',
-					featured => 1
-				};
-				push @$events, $event;
-			}
-			$html->delete;
-			return $events;
-		},
-
 		# <div class="eintrag">
 		# 	<div class="zeitraum">
 		# 		24.10.2015 - 1.11.2015					</div>
@@ -220,11 +179,42 @@ use constant {
 			return $events;
 		},
 
-		#  	<p lang="de-de" xml:lang="de-de">
-		#  	    23.10.2014, 20 Uhr<span class="hidden">:</span><br />
-		#  		<strong>Lesung:</strong>
-		#  	<a href="http://www.uni-muenster.de/HausDerNiederlande/veranstaltungen/ws1415/detail.shtml?id=000127" class="int" rel="internal"><strong>Stefan Brijs: Post für Mrs. Bromley</strong></a>
-		#  	</p>
+		# <article class="module extended">
+		# 	<footer class="metainfo" style="text-align:left; padding-left:10px;">
+		# 		<div style="width:100%;"><div style="float:left;">Ausstellung</div><div style="text-align:right;font-weight:bold;">08. Okt. 2016 &ndash; 08. Jan. 2017</div></div>
+		# 	</footer>
+		# 	<div class="module-content">
+		# 		<header>
+		# 			<h2 style="margin-bottom:5px"><a class="int" href="/HausDerNiederlande/veranstaltungen/details.shtml?id=000177">Der goldene Käfig</a></h2>
+		# 			<div class="subhead" style="margin-bottom:10px">Prächtiges Federvieh des flämischen Bilderbuchkünstlers Carll Cneut</div>
+		# 		</header>
+		#
+		# 		<figure class="teaserfigure" style="margin-right:10px;margin-bottom:15px;">
+		# 			<a title="Symbol Ausstellung" href="/HausDerNiederlande/veranstaltungen/details.shtml?id=000177">
+		#
+		# <img src="/HausDerNiederlande/files/layout/veranstaltungsicons/ausstellung180.png" width="180" height="180" class="lang" alt="Teaserbild">
+		# <picture data-lazy="200" data-alt="Teaserbild" data-default-src="/HausDerNiederlande/files/layout/veranstaltungsicons/ausstellung360.png" class="kurz">
+		# 	<source media="(min-width: 49.125em)" srcset="/HausDerNiederlande/files/layout/veranstaltungsicons/ausstellung180.png 1x, /HausDerNiederlande/files/layout/veranstaltungsicons/ausstellung349.png"/>
+		# 	<source media="(min-width: 37.5em)" srcset="/HausDerNiederlande/files/layout/veranstaltungsicons/ausstellung180.png 1x, /HausDerNiederlande/files/layout/veranstaltungsicons/ausstellung356.png"/>
+		# 	<source srcset="/HausDerNiederlande/files/layout/veranstaltungsicons/ausstellung360.png"/>
+		# 	<img src="/HausDerNiederlande/files/layout/veranstaltungsicons/ausstellung360.png" width="360" height="180" alt="Teaser">
+		# </picture>
+		#
+		# 			</a>
+		#
+		# <figcaption class="" style="max-width:750px">
+		#
+		# 		<address><a href="https://thenounproject.com/icon/68539/" target="_blank" style="color:#8c9598;">Luis Prado</a>/<a href="http://creativecommons.org/licenses/by/3.0/us/" target="_blank" style="color:#8c9598;">cc-by</a>/<acronym title="The Noun Project">TNP</acronym></a></address>
+		#   </figcaption>
+		#
+		# 		</figure>
+		# 		<div class="teaser" style="float:left;margin-top:-15px;">
+		# 			<p>Der goldene Käfig, die Ausstellung zum gleichnamigen, für den Jugendliteraturpreis nominierten Bilderbuch, zeigt Originale des belgischen Illustrators Carll Cneut (*1969), der phantastische Welten zu dem dramatisch-poetischen Märchen der Italienerin Anna Castagnoli schuf. Die Legende von Macht und Obsession, von Veränderung und Geduld wurde von Cneut in intensiven Szenarien von unvergleichbarer Bildgewalt dargestellt. <a class="int" href="/HausDerNiederlande/veranstaltungen/details.shtml?id=000177">Zu den Details</a></p>
+		# 		</div>
+		# 	</div>
+		# 	<div class="clearfix"></div>
+		# </article>
+
 		haus_der_nl => sub {
 			my $url = 'http://www.uni-muenster.de/HausDerNiederlande/veranstaltungen/';
 			my $events = [];
@@ -264,7 +254,7 @@ use constant {
 		# </p>
 		# </div>
 		villa_ten_hompel => sub {
-			my $url = shift;
+			my $url = 'http://www.stadt-muenster.de/villa-ten-hompel/veranstaltungen.html';
 			my $events = [];
 			my $content = get( $url );
 			my @matches = $content =~ /<div class="anreisser">(.*?)<\/div>/imsg;
@@ -275,7 +265,8 @@ use constant {
 						link => 'http://www.stadt-muenster.de/' . $3,
 						type => 'kultur',
 						description => $4." - ".$5." - ".$2,
-						title => $4
+						title => $4,
+						source_url => $url
 					};
 					my $uhrzeit = $1;
 					$uhrzeit = "0". $uhrzeit if ( length( $uhrzeit ) == 1 );
@@ -310,7 +301,7 @@ use constant {
 			for my $match ( @matches ) {
 				my %details = $match =~ /<p\s+class="([^"]+)">(.*?)<\/p>/imsg;
 				if ( scalar %details ) {
-					my $event = {};
+					my $event = {source_url => $url};
 					for my $classname (keys %details ) {
 						my $content = $details{$classname};
 						$event->{parsedate} = $content if $classname eq "datum";
@@ -360,7 +351,7 @@ use constant {
 		#		   </div>
 		#		 </div>
 		spec_ops => sub {
-			my $url = shift;
+			my $url = 'http://www.spec-ops.de/programm';
 			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
 			my $events = [];
 			my $nodes = $html->findnodes( '//div[@class="node node-event node-promoted node-teaser clearfix"]');
@@ -370,7 +361,8 @@ use constant {
 					link => 'http://www.spec-ops.de' . $node->findvalue('h2/a/@href'),
 					description => $node->findvalue('div[@class="content"]/div[contains(@class,"field-type-text-with-summary")]' ),
 					image => $node->findvalue('div[@class="content"]/div[contains(@class,"field-type-text-with-summary")]/div/div/p/a/img/@src' ),
-					default_type => 'party'
+					default_type => 'party',
+					source_url => $url
 				};
 				my $datum = $node->findvalue('div[@class="content"]/div[@class="field field-name-field-datum field-type-datetime field-label-hidden"]/div/div/span');
 				if ( $datum =~ /,\s*(\d\d?).\s*([a-zA-Z]+)\s+(\d{2,4})/ ) {
@@ -432,26 +424,36 @@ use constant {
 #         </li>
 
 		jovel => sub {
-			my $url = shift;
-			my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
+
+			my $urls = [
+				["konzert/rockpop","http://www.jovel.de/veranstaltungen/konzerte"],
+				['party',"http://www.jovel.de/veranstaltungen/parties"],
+				["sonstiges","http://www.jovel.de/veranstaltungen/spezial"]
+			];
 			my $events = [];
-			my $nodes = $html->findnodes('//div[@id="events"]/ul/li/div/div[@class="container"]' );
-			log_debug("found nodes", scalar @$nodes );
-			for my $node ( @$nodes ) {
-				#log_debug("adding event", $node );
-				my $event = {
-					title => $node->findvalue('div/div/div[@class="col-sm-7"]/h2'),
-					link => 'http://www.jovel.de/veranstaltungen/',
-					description => $node->findvalue('div/div/div[@class="col-sm-7"]/div[@class="text"]'),
-				};
-				my $datum = $node->findvalue('div/div/div[@class="col-sm-7"]/div[@class="info"]');
-				if ( $datum =~ /\w\w,\s*(\d\d?)\.(\d{1,2}),\s*(\d\d:\d\d)/i ) {
-					$event->{parsedate} = $1.'.'.$2.'.';
-					$event->{parsetime} = $3;
+			foreach my $row (@$urls) {
+				my $type = $row->[0];
+				my $url = $row->[1];
+				my $html= HTML::TreeBuilder::XPath->new_from_url( $url );
+				my $nodes = $html->findnodes('//div[@id="events"]/ul/li/div/div[@class="container"]' );
+				log_debug("found nodes", scalar @$nodes );
+				for my $node ( @$nodes ) {
+					#log_debug("adding event", $node );
+					my $event = {
+						title => $node->findvalue('div/div/div[@class="col-sm-7"]/h2'),
+						link => 'http://www.jovel.de/veranstaltungen/',
+						description => $node->findvalue('div/div/div[@class="col-sm-7"]/div[@class="text"]'),
+						type => $type
+					};
+					my $datum = $node->findvalue('div/div/div[@class="col-sm-7"]/div[@class="info"]');
+					if ( $datum =~ /\w\w,\s*(\d\d?)\.(\d{1,2}),\s*(\d\d:\d\d)/i ) {
+						$event->{parsedate} = $1.'.'.$2.'.';
+						$event->{parsetime} = $3;
+					}
+					$event->{md5} = $event->{parsedate} . $event->{parsetime};
+					$event->{source_url} = $url;
+					push @$events, $event;
 				}
-				$event->{md5} = $event->{parsedate} . $event->{parsetime};
-				$event->{source_url} = $url;
-				push @$events, $event;
 			}
 			return $events;
 		},
@@ -520,8 +522,11 @@ use constant {
 
 		# facebook events parsing
 		events => sub {
-			my $url = shift;
+			my $name = shift;
 			my $cfg = shift;
+			my $options = shift;
+			my $url = $options->{url};
+
 			my $fbId = $cfg->val( 'fb', 'id' );
 			my $fbSc = $cfg->val( 'fb', 'sc' );
 			if (! ( $fbId && $fbSc ) ) {
@@ -609,11 +614,12 @@ use constant {
 		},
 
 
-		# google calendar events parsing
+		# google calendar events parsing for kotenkram.de
 		gcal => sub {
-			my $url = shift;
+			my $url = 't2rek1hujonc0g724bbm24gibo%40group.calendar.google.com';
+			my $parser_name = shift;
 			my $cfg = shift;
-			my $location = shift;
+			my $source_url = "http://www.kotenkram.de";
 			die("NO Google Calendar Email!") unless $url;
 
 			my $token = $cfg->val( 'gcal', 'token' );
@@ -644,11 +650,13 @@ use constant {
 					my $event = {
 						title => $item->{summary},
 						description => $item->{description},
-						tags => $location->{tags},
-						link => $location->{location_url},
+						link => $source_url,
 						datetime => $start,
 						enddate => $end,
-						md5 => md5_hex( $item->{id} )
+						md5 => md5_hex( $item->{id} ),
+						tags=> "Eltern, Kinder, Flohmärkte, Tagesmütter",
+						type=> "kinderflohmarkt",
+						source_url=> $source_url
 					};
 					push @$events, $event;
 				}

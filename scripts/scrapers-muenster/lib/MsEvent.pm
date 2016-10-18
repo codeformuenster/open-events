@@ -46,7 +46,6 @@ sub save_import_stats {
 
 sub save_event {
 	my $event 		= shift;
-	my $location_id = $event->{location_id};
 	$IMP_STATS->{total} ++;
 
 	$event->{description} = cleanup( $event->{description}) if ( $event->{description} );
@@ -175,7 +174,7 @@ sub save_event {
 	# };
 
 	my $json = encode_json( $event );
-	print STDOUT $json . "\n";
+	print STDOUT $json . ",\n";
 
 	return $result;
 }
