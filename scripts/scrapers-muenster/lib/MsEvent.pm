@@ -84,6 +84,7 @@ sub save_event {
 				my $seconds_since_jan1_1970 = parsedate($event->{parsedate} );
 				$event->{datetime} = strftime("%Y-%m-%d %H:%M:%S" , localtime( $seconds_since_jan1_1970 ) );
 			}
+			delete $event->{parsedate};
 		}
 		if ( $event->{parsetime} ) {
 			my $ptime = $event->{parsetime};
@@ -92,6 +93,7 @@ sub save_event {
 			} elsif ( $ptime =~ /([012]?\d)\s*Uhr/ ) {
 				$event->{datetime} .= ' ' . sprintf( '%02d', $1 ) . ':00' ;
 			}
+			delete $event->{parsetime};
 		}
 
 
@@ -101,6 +103,7 @@ sub save_event {
 		if ( $event->{datetime} !~ /^\d{4}-\d{2}-\d\d(\s\d\d:\d\d)?/ ) {
 			return event_error( -3,"WRONG DATE FORMAT ON 'datetime'", $event );
 		}
+
 
 	}
 	if ( !$event->{type} ) {

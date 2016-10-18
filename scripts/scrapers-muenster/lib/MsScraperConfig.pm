@@ -450,7 +450,7 @@ use constant {
 						$event->{parsedate} = $1.'.'.$2.'.';
 						$event->{parsetime} = $3;
 					}
-					$event->{md5} = $event->{parsedate} . $event->{parsetime};
+					$event->{md5} = md5_hex($event->{parsedate} . $event->{parsetime});
 					$event->{source_url} = $url;
 					push @$events, $event;
 				}
@@ -506,7 +506,8 @@ use constant {
 									$descnode->findvalue('div[@class="my-tribe-events-meta"]/span[@class="my-tribe-events-preisinfos"]'),
 					image => $node->findvalue('div[@class="tribe-events-event-image"]/a/img/@src'),
 					type => $type,
-					tags => $descnode->findvalue('div[@class="my-tribe-events-stilrichtung"]' )
+					tags => $descnode->findvalue('div[@class="my-tribe-events-stilrichtung"]' ),
+					source_url => $url
 				};
 				my $dateday = $node->findvalue('div[@class="tribe-events-date-listview"]/div[@class="date-date"]');
 				my $datem_text = $node->findvalue('div[@class="tribe-events-date-listview"]/div[@class="date-month"]');
@@ -621,6 +622,10 @@ use constant {
 			my $cfg = shift;
 			my $source_url = "http://www.kotenkram.de";
 			die("NO Google Calendar Email!") unless $url;
+			if (!$cfg) {
+				log_error('Google credentials config not found.');
+				return [];
+			}
 
 			my $token = $cfg->val( 'gcal', 'token' );
 			my $date = strftime("%Y-%m-%d" , localtime(time-24*60*60) );
