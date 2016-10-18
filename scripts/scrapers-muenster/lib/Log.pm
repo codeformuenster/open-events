@@ -14,44 +14,44 @@ our @EXPORT = qw( log_info log_debug log_error log_set_config log_reset_timer lo
 #
 
 #
-# define log levels. 
-# Attention: These must be ordered: FIRST list the most specific package names (like Project::Service::ImageUpload). 
+# define log levels.
+# Attention: These must be ordered: FIRST list the most specific package names (like Project::Service::ImageUpload).
 # Then the more general ones ( like Project::Service )
 #
-my %rules = ( 
+my %rules = (
 
 	# specific log levels on package or method level
     'BadBuilder::Database::MySQL5'=>"debug",
 	# logger defaults
-	"LEVEL_DEFAULT" => $ENV{MOJO_LOG_LEVEL} || "debug",			# default log level
+	"LEVEL_DEFAULT" => $ENV{LOG_LEVEL} || "debug",			# default log level
 	"PACKAGE_CHARS" => 40				# string length for the package & method name in the log file ( 0 = no package name )
 
 );
 
 
 
-# 
+#
 # print a start message to the log with current date & time
 #
 my @start_time = Time::HiRes::gettimeofday();
-my $prefix = ""; 
+my $prefix = "";
 sub log_reset_timer {
 	$prefix = shift || "";
-	$rules{LEVEL_DEFAULT} = $ENV{MOJO_LOG_LEVEL} if $ENV{MOJO_LOG_LEVEL};
+	$rules{LEVEL_DEFAULT} = $ENV{LOG_LEVEL} if $ENV{LOG_LEVEL};
 	$rules{LEVEL_DEFAULT} = 'debug' if $prefix;
 	@start_time = Time::HiRes::gettimeofday();
 }
-print STDERR scalar(localtime). "\t\e[37;44m [ -------------------------- RESTART ------------------------- ] \e[00m\n";
+log_info( scalar(localtime). "\t\e[37;44m [ -------------------------- RESTART ------------------------- ] \e[00m");
 
 #
-# log_debug(..) 
+# log_debug(..)
 #
-# use this for very low level messages only 
+# use this for very low level messages only
 # (like database queries, hash dumps, etc.)
-# Stuff you need for debugging 
+# Stuff you need for debugging
 #
 sub log_debug {
-	_show( "\e[01;31mdebug", @_ ) unless _checkLogLevel( 1 ); 
+	_show( "\e[01;31mdebug", @_ ) unless _checkLogLevel( 1 );
 }
 
 #
@@ -62,12 +62,12 @@ sub log_debug {
 # e.g. "creating thumbnail file $FILENAME, crop: $Ax$B"
 #
 sub log_info {
-	_show( "\e[01;33minfo", @_ ) unless _checkLogLevel( 2 ); 
+	_show( "\e[01;33minfo", @_ ) unless _checkLogLevel( 2 );
 }
 
 #
 # log_error(..)
-# use for important messages and errors 
+# use for important messages and errors
 # that should definitively be logged
 #
 sub log_error {
@@ -79,17 +79,17 @@ sub log_error {
 # check if the log level settings for the current package allow display of this message
 #
 sub _checkLogLevel {
-	my $messagelevel = shift; 
+	my $messagelevel = shift;
 	#
-	my $method = (caller(2))[3]; 
+	my $method = (caller(2))[3];
 	my $level = $rules{'LEVEL_DEFAULT'};
 	foreach my $package ( keys %rules ) {
 		if ( defined $method && $method =~ /^${package}/ ) {
 			$level = $rules{$package};
-			last; 
+			last;
 		}
 	}
-	my $numlevel = $level eq "info" ? 2 : ( $level eq "debug") ? 1 : 3; 
+	my $numlevel = $level eq "info" ? 2 : ( $level eq "debug") ? 1 : 3;
 	return ( $messagelevel < $numlevel )
 }
 
@@ -102,7 +102,7 @@ sub _show {
 	my $method = "";
 	my $chars = $rules{'PACKAGE_CHARS'};
 	if ( $chars ) {
-		$method = (caller(2))[3]; 
+		$method = (caller(2))[3];
 		if (defined $method) {
 		    $method =~ s/::/:/g;
 		    $method = sprintf( "% ".$chars."s", substr( $method, -$chars ) );
@@ -110,25 +110,25 @@ sub _show {
 		    $method = "";
 		}
 	}
-	my $line = (caller(1))[2]; 
+	my $line = (caller(1))[2];
 	my $string = _getString( @args );
-	print STDERR $prefix . log_get_timer() . "\t$severity\t\e[00;34m$method($line)\t\e[00m". $string ."\n"; 
+	print STDERR $prefix . log_get_timer() . "\t$severity\t\e[00;34m$method($line)\t\e[00m". $string ."\n";
 }
 
 sub _getString {
-	my $string = ""; 
+	my $string = "";
 	foreach my $x ( @_ ) {
 		my $out = $x;
 		if ( !defined $x ) {
 			$out = "*undef*";
 		} elsif( ! ref($x) ) {
-			$string =~  s/\n//g; 			
+			$string =~  s/\n//g;
 		} elsif ( UNIVERSAL::isa($x,'HASH') ) {
 		    my $tmp = "hash reference:  {\n" ;
 		    for my $k ( sort keys %$x ) {
 		    	$tmp.="\t $k => "._getString( $x->{$k} ).",\n";
 		    }
-		    $out = $tmp."}\n"; 
+		    $out = $tmp."}\n";
 		} elsif(  UNIVERSAL::isa($x,'ARRAY') ) {
 		    $out = "array reference: " . Dumper( $x );
 		}
@@ -136,25 +136,25 @@ sub _getString {
 		    $out = "scalar ref: " . $$x;
 		}
 		elsif ( UNIVERSAL::isa($x,'CODE') ) {
-		    $out = "code reference: " . var_eval( &$x ); 
-		} 
-		$string .= " " if $string; 
-		$string .= $out; 
+		    $out = "code reference: " . var_eval( &$x );
+		}
+		$string .= " " if $string;
+		$string .= $out;
 	}
-	return $string; 
+	return $string;
 }
 
 #
 #  sadly this does not work, maybe because mojolicious already does something to STDOUT?
 #
-# otherwise we could do cool stuff like write 
+# otherwise we could do cool stuff like write
 # 	log_debug( sub {Dumper( $bla ) } )
-# somewhere in the code, and Dumper gets executed only when logging is enabled. 
+# somewhere in the code, and Dumper gets executed only when logging is enabled.
 #
 sub var_eval {
 	# my $capture = IO::Capture::Stdout->new();
 	# $capture->start();
-	# eval shift; 
+	# eval shift;
 	# $capture->end();
 	# my @lines = $capture->read();
 	# return join('', @lines);
@@ -165,9 +165,9 @@ sub var_eval {
 # get script run time
 #
 sub log_get_timer {
-	return 
+	return
 		substr( scalar(localtime), 11,8 )
-		.substr( Time::HiRes::gettimeofday(),10); 
+		.substr( Time::HiRes::gettimeofday(),10);
 }
 
 sub get_script_time {
@@ -182,7 +182,7 @@ sub log_set_config {
 	my $var = shift;
 	my $val = shift;
 	log_debug( "setting log config var $var to $val");
-	$rules{$var} = $val; 
+	$rules{$var} = $val;
 }
 
 

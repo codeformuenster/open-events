@@ -29,71 +29,74 @@ my $cfg = Config::IniFiles->new( -file => "muenster.ini" );
 # commandline parameters
 #
 my $parse_only = shift;
-my $loglevel = shift || ( $parse_only ? 'debug' : "info" );
-log_set_config( 'LEVEL_DEFAULT', $loglevel );
+# my $loglevel = shift || ( $parse_only ? 'debug' : "info" );
+#log_set_config( 'LEVEL_DEFAULT', $loglevel );
 log_info( "parsing only ", $parse_only ) if $parse_only;
 
 
 
 my $transformers = MsScraperConfig::TRANSFORMATORS;
 
-
-
-
-
-
-# read locations definition file
-my $locations_file = 'locations.json';
-open(my $fh, '<', $locations_file) or die "Could not open file '$locations_file' $!";
-my $jsonfile = "";
-while (my $row = <$fh>) {
-  $jsonfile.=$row;
-}
-my $locations = decode_json( $jsonfile );
-
-
+print "[\n";
 # parse events from each location page
-for my $row ( @$locations) {
-	log_debug( "parsing source:", $row->{source_id}, ", location_id:", $row->{location_id}, $row->{parser} );
-	if ( (!$parse_only ) || ( $parse_only && ( $row->{parser} eq $parse_only)  ) || ( $parse_only && ( $row->{source_id} eq $parse_only )  )  ) {
-		log_info( "===========================>",$row->{parser},"terminseite location:", $row->{location_id}, "source:", $row->{source_id}, $row->{source_url});
-		parse_terminseite( $row );
-	}
+foreach my $parser_name (keys %$transformers) {
+  if ( (!$parse_only ) || ( $parse_only && ( $parser_name eq $parse_only)  )  ) {
+    log_info( "===========================>",$parser_name );
+    my $parser_code = $transformers->{$parser_name};
+	  parse_terminseite( $parser_name, $parser_code );
+  }
 }
-close $fh;
+
+# parse events from fb urls
+my $fb_urls = [
+ ['heile_welt', 'https://www.facebook.com/heile.welt.7/661314167323865'],
+ ['655321_milchbar', 'https://www.facebook.com/pages/655321-milchbar/466498750114656'],
+ ['boheme_boulette', 'https://www.facebook.com/111155778948430'],
+ ['watusibar_ms', "https://www.facebook.com/watusibarms/131244416925066"],
+ ['pension_schmidt', 'https://www.facebook.com/schmidt.pension/203257859770378'],
+ ['cuba_nova', 'https://www.facebook.com/cubanova.de/172682859543687'],
+ ['frauenstr_24', 'https://www.facebook.com/pages/Frauenstrasse-24/482134915163'],
+ ['heaven_ms','https://www.facebook.com/heavenmuenster/121914222610'],
+ ['der_stur',"https://www.facebook.com/derstur48/749352325078218"],
+ ['schwarzes_schaf',"https://www.facebook.com/DasSchwarzesSchafMS/303333226364758"],
+ ['fusion_ms', "https://www.facebook.com/fusionmuenster/117570597074"]
+];
+foreach my $fb_url (@$fb_urls) {
+  my $parser_name = $fb_url->[0];
+  if ( (!$parse_only ) || ( $parse_only && ( $parser_name eq $parse_only)  )  ) {
+    log_info( "===========================>",$parser_name );
+    my $parser_code = $transformers->{events};
+    my $options = {'url'=> $fb_url->[1]};
+	  parse_terminseite( $parser_name, $parser_code, $cfg, $options );
+  }
+}
+
 
 
 sub parse_terminseite {
-	my $args = shift;
-	my $url 		= $args->{source_url};
-	my $source_id 	= $args->{source_id};
-	my $location_id = $args->{location_id};
-  my $location = $args;
+	my $parser_name = shift;
+	my $parser_code = shift;
+  my $config = shift;
+  my $options = shift;
 
-	unless ($url) {
-		log_error( "NO URL") ;
-		return ;
-	};
-	unless ( $transformers->{$args->{parser} } ) {
-		log_error("MISSING PARSER FOR ", $args->{parser} );
-		return;
-	}
+	log_debug("start parser", $parser_name );
+	MsEvent::init_import_stats( $parser_name );
+	log_debug("mid parser", $parser_name );
+  # execute the parser code
+  my $events = &{$parser_code}($parser_name, $config, $options);
+	log_debug("done parsing", $parser_name );
 
-	#
-	# parse all the urls
-	#
-	log_debug("parsing url", $url );
-	MsEvent::init_import_stats( $source_id );
-	my $events = &{ $transformers->{$args->{parser} } }( $url, $cfg, $args );
-	my $results = { };
+  # save the resulting events
 	for my $event (@$events) {
-		$event->{default_type} = $args->{default_event_type} if ($args->{default_event_type} && !$event->{type} );
-		$event->{location_id} = $location_id;
-		$event->{location} = $location;
-
+    if (!$event->{source_url}) {
+      die("Missing source_url");
+    }
+		$event->{location} = $parser_name if (!$event->{location});
 		my $res = MsEvent::save_event( $event );
 	}
 
 	MsEvent::save_import_stats( );
 
 }
+
+print "\n]\n";
