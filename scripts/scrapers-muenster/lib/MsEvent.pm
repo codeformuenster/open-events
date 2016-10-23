@@ -88,9 +88,9 @@ sub save_event {
 		if ( $event->{parsetime} ) {
 			my $ptime = $event->{parsetime};
 			if ($ptime =~ /([012]?\d)[.:](\d\d)/ ) {
-				$event->{datetime} .= ' ' . sprintf( '%02d', $1 ) . ':' . $2 ;
+				$event->{datetime} .= ' ' . sprintf( '%02d', $1 ) . ':' . $2 . ':00';
 			} elsif ( $ptime =~ /([012]?\d)\s*Uhr/ ) {
-				$event->{datetime} .= ' ' . sprintf( '%02d', $1 ) . ':00' ;
+				$event->{datetime} .= ' ' . sprintf( '%02d', $1 ) . ':00' . ':00';
 			}
 		}
 
