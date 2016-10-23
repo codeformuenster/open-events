@@ -43,7 +43,7 @@ foreach my $parser_name (keys %$transformers) {
   if ( (!$parse_only ) || ( $parse_only && ( $parser_name eq $parse_only)  )  ) {
     log_info( "===========================>",$parser_name );
     my $parser_code = $transformers->{$parser_name};
-	  parse_terminseite( $parser_name, $parser_code );
+    parse_terminseite( $parser_name, $parser_code );
   }
 }
 
@@ -67,35 +67,35 @@ foreach my $fb_url (@$fb_urls) {
     log_info( "===========================>",$parser_name );
     my $parser_code = $transformers->{events};
     my $options = {'url'=> $fb_url->[1]};
-	  parse_terminseite( $parser_name, $parser_code, $cfg, $options );
+    parse_terminseite( $parser_name, $parser_code, $cfg, $options );
   }
 }
 
 
 
 sub parse_terminseite {
-	my $parser_name = shift;
-	my $parser_code = shift;
+  my $parser_name = shift;
+  my $parser_code = shift;
   my $config = shift;
   my $options = shift;
 
-	log_debug("start parser", $parser_name );
-	MsEvent::init_import_stats( $parser_name );
-	log_debug("mid parser", $parser_name );
+  log_debug("start parser", $parser_name );
+  MsEvent::init_import_stats( $parser_name );
+  log_debug("mid parser", $parser_name );
   # execute the parser code
   my $events = &{$parser_code}($parser_name, $config, $options);
-	log_debug("done parsing", $parser_name );
+  log_debug("done parsing", $parser_name );
 
   # save the resulting events
-	for my $event (@$events) {
+  for my $event (@$events) {
     if (!$event->{source_url}) {
       die("Missing source_url");
     }
-		$event->{location} = $parser_name if (!$event->{location});
-		my $res = MsEvent::save_event( $event );
-	}
+    $event->{location} = $parser_name if (!$event->{location});
+    my $res = MsEvent::save_event( $event );
+  }
 
-	MsEvent::save_import_stats( );
+  MsEvent::save_import_stats( );
 
 }
 
