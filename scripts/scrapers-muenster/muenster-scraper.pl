@@ -89,10 +89,12 @@ sub parse_terminseite {
   # save the resulting events
   for my $event (@$events) {
     if (!$event->{source_url}) {
-      die("Missing source_url");
+      log_debug("Missing source_url");
     }
-    $event->{location} = $parser_name if (!$event->{location});
-    my $res = MsEvent::save_event( $event );
+    else {
+      $event->{location} = $parser_name if (!$event->{location});
+      my $res = MsEvent::save_event( $event );
+    }
   }
 
   MsEvent::save_import_stats( );
