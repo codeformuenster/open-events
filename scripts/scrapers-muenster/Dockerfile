@@ -15,10 +15,3 @@ WORKDIR /usr/src/myapp
 COPY . /usr/src/myapp
 
 CMD [ "perl", "./muenster-scraper.pl" ]
-
-
-
-docker run --env LOG_LEVEL=ERROR -ti local/scapers-muenster fish --command "\
-env LOG_LEVEL=ERROR perl muenster-scraper.pl | while read line ;\
-    curl --request POST --user admin:password -sS https://elasticsearch.kube.codeformuenster.org/events-testing/event/ --data-raw (echo \$line | jq -c '.')
-end"
