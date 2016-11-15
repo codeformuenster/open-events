@@ -1,0 +1,84 @@
+#%RAML 1.0
+title: Events API
+version: v1
+baseUri: http://api.samplehost.com
+types:
+  Message:
+    type: object
+    properties:
+      message: string
+  Image:
+    type: object
+    properties:
+      copyright: string
+      url: string
+  Location:
+    type: object
+    properties:
+      latitude: number
+      longitude: number
+      name: string
+  Event:
+    type: object
+    properties:
+      id: string
+      name: string
+      startDate: datetime
+      endDate: datetime
+      url: string
+      description?: string
+      image?: Image
+      location: Location
+      category?: string
+      tags?: string
+
+  LatLong: # lat & long required; mutually exclusive with location
+     properties:
+       latitude: number
+       longitude: number
+  Category:
+     properties:
+       categorry: string
+  SearchQuery:
+     properties:
+       searchQuery: string
+  DateRange:
+    properties:
+      startDate: datetime
+      endDate: datetime
+  Date:
+    properties:
+      date: date-only
+  ResultSize:
+    properties:
+      start: number
+      limit: number
+
+/event/{id}:
+  displayName: Use this route to retrieve a list of events
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            type: Event
+      400:
+        body:
+          application/json:
+            type: Message
+
+/events:
+  get:
+    queryString:
+      type: [ResultSize?, LatLong?, Category?, SearchQuery?, DateRange | Date ]
+    responses:
+      200:
+        body:
+          application/json:
+            type: Event[]
+            minItems: 1
+            uniqueItems: true
+      400:
+        body:
+          application/json:
+            type: Message
