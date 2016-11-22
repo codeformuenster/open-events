@@ -1,0 +1,31 @@
+
+#%RAML 0.8
+---
+title: pizza_factory API
+documentation:
+    - title: pizza_factory REST API
+      content: |
+        Welcome to the pizza_factory API.
+baseUri: http://{host}:{port}/{version}
+version: v1
+mediaType: application/json
+protocols: [HTTP]
+
+/events:
+    displayName: Collection of ingredients for toppings
+    get:
+        description: Get all topping ingredients
+    post:
+        description: Create a topping ingredient
+        body:
+            application/json:
+                schema: !include schemas/events.json
+
+    /{id}:
+        displayName: A particular topping ingredient
+        get:
+            description: Get a particular topping ingredient
+        delete:
+            description: Delete a particular topping ingredient
+        patch:
+            description: Update a particular topping ingredient

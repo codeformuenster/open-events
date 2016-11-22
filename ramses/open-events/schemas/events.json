@@ -1,0 +1,89 @@
+{
+  "id": "Event",
+  "title": "Event",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "_db_settings": {
+          "type": "id_field",
+          "required": true,
+          "primary_key": true
+      }
+
+    },
+    "name": {
+      "type": "string",
+      "_db_settings": {
+          "type": "string",
+          "required": true
+      }
+    },
+    "startDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "endDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "url": {
+      "type": "string"
+    },
+    "location": {
+      "id": "Location",
+      "title": "Location",
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "type": "number"
+        },
+        "longitude": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude",
+        "name"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "image": {
+      "id": "Image",
+      "title": "Image",
+      "type": "object",
+      "properties": {
+        "copyright": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "copyright",
+        "url"
+      ]
+    },
+    "category": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "startDate",
+    "endDate",
+    "url",
+    "location"
+  ]
+}

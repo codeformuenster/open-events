@@ -1,0 +1,82 @@
+{
+  "type": "array",
+  "items": {
+    "id": "Event",
+    "title": "Event",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "startDate": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "endDate": {
+        "type": "string",
+        "format": "date-time"
+      },
+      "url": {
+        "type": "string"
+      },
+      "location": {
+        "id": "Location",
+        "title": "Location",
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "latitude",
+          "longitude",
+          "name"
+        ]
+      },
+      "description": {
+        "type": "string"
+      },
+      "image": {
+        "id": "Image",
+        "title": "Image",
+        "type": "object",
+        "properties": {
+          "copyright": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "copyright",
+          "url"
+        ]
+      },
+      "category": {
+        "type": "string"
+      },
+      "tags": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "name",
+      "startDate",
+      "endDate",
+      "url",
+      "location"
+    ]
+  }
+}
