@@ -1,7 +1,7 @@
-require 'HTTParty'
-require 'Nokogiri'
-require 'JSON'
-require 'Pry'
+require 'httparty'
+require 'nokogiri'
+require 'json'
+require 'pry'
 
 module PartyalarmScraper
   class << self
