@@ -3,9 +3,9 @@ curl -XPUT http://localhost:9200/events -d '{
     "mappings" : {
         "event" : {
             "properties" : {
-                "location" : {
+                "venue" : {
                     "properties": {
-                        "geo": { "type" : "geo_point" }
+                        "location": { "type" : "geo_point" }
                     }
                 }
             }
