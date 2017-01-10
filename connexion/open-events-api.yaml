@@ -1,0 +1,271 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+swagger: '2.0'
+info:
+  title: Open Events API
+  description: Move your app forward with the Events API - alpha v0.02
+  version: "1.0.0"
+host: localhost:8080
+# array of all schemes that your API supports
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+consumes:
+  - application/json
+paths:
+  /events:
+    get:
+      summary: Get event list
+      description: |
+        Search events.
+      parameters:
+        - name: lat
+          in: query
+          description: Latitude component of location.
+          required: true
+          type: number
+          format: double
+        - name: lon
+          in: query
+          description: Longitude component of location.
+          required: true
+          type: number
+          format: double
+        - name: radius
+          in: query
+          description: Radios of location search.
+          type: number
+          format: double
+        - name: start_date
+          description: Search events starting at this date
+          in: query
+          type: string
+          format: date-timo
+        - name: end_date
+          description: End date for search
+          in: query
+          type: string
+          format: date-timo
+        - name: query
+          description: String search query
+          in: query
+          type: string
+        - name: category
+          in: query
+          type: string
+      operationId: app.get_events
+      tags:
+        - Events
+      responses:
+        200:
+          description: An array of events
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /event/{id}:
+    get:
+      description:
+        Get details of an event
+      parameters:
+        - name: id
+          in: path
+          description: The internal id of the event.
+          required: true
+          type: number
+          format: double
+      operationId: app.get_event
+      tags:
+        - Events
+      responses:
+        200:
+          description: A single event
+          schema:
+            $ref: '#/definitions/Event'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      description:
+        Update or create an event
+      parameters:
+        - name: id
+          in: path
+          description: The internal id of the event.
+          required: true
+          type: number
+          format: double
+        - name: event
+          in: body
+          description: The event body
+          required: true
+          schema:
+            $ref: '#/definitions/Event'
+      operationId: app.save_event
+      tags:
+        - Events
+      responses:
+        200:
+          description: Confirmation message
+          schema:
+            $ref: '#/definitions/Message'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Event:
+    type: object
+    properties:
+      event_id:
+        type: string
+        description: Unique identifier representing a specific event with title, date, time, location.
+      description:
+        type: string
+        description: Description of event.
+      title:
+        type: string
+        description: Title of event.
+      url:
+        type: string
+        description: Link to event detail page
+      venue:
+        $ref: '#/definitions/Venue'
+      start_date:
+        type: string
+        format: date-time
+      end_date:
+        type: string
+        format: date-time
+      tags:
+        type: string
+        description: Tags describing the event
+      source:
+        $ref: '#/definitions/Source'
+      category:
+        type: string
+        enum:
+         - "Bildung"
+         - "Bildung/Vortrag & Diskussion"
+         - "Bildung/Konferenz & Workshop"
+         - "Bühne"
+         - "Bühne/Tanz"
+         - "Bühne/Comedy & Kleinkunst"
+         - "Bühne/Kinder"
+         - "Bühne/Musical & Show"
+         - "Bühne/Oper"
+         - "Bühne/Schauspiel"
+         - "Flohmarkt"
+         - "Flohmarkt/Trödelmarkt"
+         - "Flohmarkt/Nachtflohmarkt"
+         - "Flohmarkt/Kinderflohmarkt"
+         - "Freizeit"
+         - "Freizeit/Bälle & Feste"
+         - "Freizeit/Club & Party"
+         - "Freizeit/Karneval"
+         - "Freizeit/Kinder & Jugend"
+         - "Freizeit/Messen & Märkte"
+         - "Freizeit/Senioren"
+         - "Freizeit/Tanz"
+         - "Freizeit/Vereine & Verbände"
+         - "Kunst & Literatur"
+         - "Kunst & Literatur/Ausstellungen"
+         - "Kunst & Literatur/Führungen"
+         - "Kunst & Literatur/Lesungen"
+         - "Musik"
+         - "Musik/Chöre"
+         - "Musik/Festivals"
+         - "Musik/Jazz, Blues, Soul, Funk, Folk"
+         - "Musik/Klassik"
+         - "Musik/Rock & Pop"
+         - "Musik/Metal & Punk"
+         - "Musik/Schlager & Volksmusik"
+         - "Politik"
+         - "Politik/Lokalpolitik"
+         - "Politik/Überregional"
+         - "Sport"
+         - "Sport/Mitmachen"
+         - "Sport/Zuschauen"
+        description: Category of event.
+      image:
+        $ref: '#/definitions/Image'
+  Venue:
+    type: object
+    properties:
+      venue_id:
+        type: string
+        description: Unique identifier representing a specific venue
+      name:
+        type: string
+        description: Venue name
+      location:
+        $ref: '#/definitions/Location'
+      street:
+        type: string
+        description: Street address of venue.
+      city:
+        type: string
+        description: City name of venue.
+      zip:
+        type: string
+        description: Zip code of venue.
+      country:
+        type: string
+        description: Country of venue
+  Image:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Image url.
+      copyright:
+        type: string
+        description: Name of copyright owner
+      license:
+        type: string
+        description: License of image
+  Source:
+    type: object
+    properties:
+      url:
+        type: string
+        description: Source url.
+      name:
+        type: string
+        description: Name of event source
+  Location:
+    type: object
+    properties:
+      lat:
+        type: number
+        format: double
+        description: Latitude.
+      lon:
+        type: number
+        format: double
+        description: Longitude.
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
+  Message:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
