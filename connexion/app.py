@@ -21,28 +21,6 @@ def save_event(id, event):
     es.index(index="event", doc_type="event", id=id, body=event)
     return NoContent, 200
 
-# def put_pet(pet_id, pet):
-    # exists = pet_id in PETS
-    # pet['id'] = pet_id
-    # if exists:
-        # logging.info('Updating pet %s..', pet_id)
-        # PETS[pet_id].update(pet)
-    # else:
-        # logging.info('Creating pet %s..', pet_id)
-        # pet['created'] = datetime.datetime.utcnow()
-        # PETS[pet_id] = pet
-    # return NoContent, (200 if exists else 201)
-
-
-# def delete_pet(pet_id):
-    # if pet_id in PETS:
-        # logging.info('Deleting pet %s..', pet_id)
-        # del PETS[pet_id]
-        # return NoContent, 204
-    # else:
-        # return NoContent, 404
-
-
 logging.basicConfig(level=logging.INFO)
 app = connexion.App(__name__)
 app.add_api('open-events-api.yaml')
