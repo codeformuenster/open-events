@@ -55,6 +55,7 @@ paths:
         - name: category
           in: query
           type: string
+      operationId: app.get_events
       tags:
         - Events
       responses:
@@ -79,6 +80,7 @@ paths:
           required: true
           type: number
           format: double
+      operationId: app.get_event
       tags:
         - Events
       responses:
@@ -106,6 +108,7 @@ paths:
           required: true
           schema:
             $ref: '#/definitions/Event'
+      operationId: app.save_event
       responses:
         200:
           description: Confirmation message
