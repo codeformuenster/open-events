@@ -1,0 +1,195 @@
+#%RAML 0.8
+title: Events API
+version: v1
+baseUri: http://api.samplehost.com
+schemas:
+- Event: |
+    {
+      "id": "Event",
+      "title": "Event",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "url": {
+          "type": "string"
+        },
+        "location": {
+          "id": "Location",
+          "title": "Location",
+          "type": "object",
+          "properties": {
+            "latitude": {
+              "type": "number"
+            },
+            "longitude": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "latitude",
+            "longitude",
+            "name"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "image": {
+          "id": "Image",
+          "title": "Image",
+          "type": "object",
+          "properties": {
+            "copyright": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "copyright",
+            "url"
+          ]
+        },
+        "category": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "startDate",
+        "endDate",
+        "url",
+        "location"
+      ]
+    }
+- Event-array: |
+    {
+      "type": "array",
+      "items": {
+        "id": "Event",
+        "title": "Event",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "url": {
+            "type": "string"
+          },
+          "location": {
+            "id": "Location",
+            "title": "Location",
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "latitude",
+              "longitude",
+              "name"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "id": "Image",
+            "title": "Image",
+            "type": "object",
+            "properties": {
+              "copyright": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "copyright",
+              "url"
+            ]
+          },
+          "category": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "startDate",
+          "endDate",
+          "url",
+          "location"
+        ]
+      }
+    }
+/event/{id}:
+  uriParameters:
+    id:
+      type: string
+      required: true
+      displayName: id
+  get:
+    displayName: EventById
+    responses:
+      200:
+        description: Success
+        body:
+          application/json:
+            schema: Event
+      400:
+        description: 'TODO: Add error message'
+/events:
+  get:
+    displayName: Events
+    responses:
+      200:
+        description: Success
+        body:
+          application/json:
+            schema: Event-array
+      400:
+        description: 'TODO: Add error message'
