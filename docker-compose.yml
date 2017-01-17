@@ -1,59 +1,16 @@
-elasticsearch:
-  image: elasticsearch:latest
-  command: elasticsearch -Des.network.host=0.0.0.0
-  ports:
-    - "9200:9200"
-#  volumes:
-#   add this if you want to persist your data on the host system
-#    - /path/to/storage:/usr/share/elasticsearch/data
-#   add this for your own elasticsearch configuration
-#   - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+version: '2'
 
+services:
+  elasticsearch:
+    image: elasticsearch:5.1
 
-#logstash:
-#  image: logstash:latest
-#  command: logstash -f /etc/logstash/conf.d/logstash.conf
-#  volumes:
-#    - ./logstash/config:/etc/logstash/conf.d
-#  ports:
-#    - "5000:5000"
-#  links:
-#    - elasticsearch
+  kibana:
+    image: kibana:5.1
+    volumes:
+      - ./kibana/config/:/etc/kibana/
+    depends_on:
+      - elasticsearch
 
-
-kibana:
-  build: kibana/
-  volumes:
-    - ./kibana/config/kibana.yml:/opt/kibana/config/kibana.yml
-  ports:
-    - "5601:5601"
-  links:
-    - elasticsearch
-
-# eventinputform:
-#   image: codeformuenster/open-events_event-input-form
-#   ports:
-#     - "5000:5000"
-#   links:
-#     - logstash
-
-# parkleitsystemapi:
-#   image: codeformuenster/parkleitsystemapi
-#   command: ./scrape-loop-logstash.sh
-#   links:
-#     - logstash
-
-#scrapersmuenster:
-# # image: scrapersmuenster_scrapersmuenster
-# build: scripts/scrapers-muenster
-# # dockerfile: scripts/scrapers-muenster/Dockerfile
-# command: ./scrape-loop-logstash.sh
-# links:
-#   - logstash
-
-# scrapersdortmund:
-#  # image: codeformuenster/open-events_scrapers-dortmund
-#  build: scripts/scrapers-dortmund
-#  command: ./scrape-loop-logstash.sh
-#  links:
-#    - logstash
+# $ docker network list
+# $ docker network inspect openevents_default
+# $ xdg-open xdg-open http://$KIBANA_IP:5601
