@@ -78,8 +78,8 @@ paths:
           in: path
           description: The internal id of the event.
           required: true
-          type: number
-          format: integer
+          type: string
+          format: string
       operationId: app.get_event
       tags:
         - Events
@@ -100,8 +100,8 @@ paths:
           in: path
           description: The internal id of the event.
           required: true
-          type: number
-          format: double
+          type: string
+          format: string
         - name: event
           in: body
           description: The event body
@@ -120,6 +120,31 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+
+  /event:
+    post:
+      description:
+        create an event
+      parameters:
+        - name: event
+          in: body
+          description: The event body
+          required: true
+          schema:
+            $ref: '#/definitions/Event'
+      operationId: app.create_event
+      tags:
+        - Events
+      responses:
+        200:
+          description: Confirmation message
+          schema:
+            $ref: '#/definitions/Message'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
 definitions:
   Event:
     type: object
