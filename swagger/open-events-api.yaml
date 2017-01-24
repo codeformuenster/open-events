@@ -35,19 +35,19 @@ paths:
           format: double
         - name: radius
           in: query
-          description: Radios of location search.
+          description: Radius of location search.
           type: number
-          format: double
+          format: integer
         - name: start_date
           description: Search events starting at this date
           in: query
           type: string
-          format: date-timo
+          format: date-time
         - name: end_date
           description: End date for search
           in: query
           type: string
-          format: date-timo
+          format: date-time
         - name: query
           description: String search query
           in: query
@@ -78,8 +78,8 @@ paths:
           in: path
           description: The internal id of the event.
           required: true
-          type: number
-          format: double
+          type: string
+          format: string
       operationId: app.get_event
       tags:
         - Events
@@ -92,7 +92,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-    post:
+    put:
       description:
         Update or create an event
       parameters:
@@ -100,8 +100,8 @@ paths:
           in: path
           description: The internal id of the event.
           required: true
-          type: number
-          format: double
+          type: string
+          format: string
         - name: event
           in: body
           description: The event body
@@ -109,6 +109,8 @@ paths:
           schema:
             $ref: '#/definitions/Event'
       operationId: app.save_event
+      tags:
+        - Events
       responses:
         200:
           description: Confirmation message
@@ -118,6 +120,31 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+
+  /event:
+    post:
+      description:
+        create an event
+      parameters:
+        - name: event
+          in: body
+          description: The event body
+          required: true
+          schema:
+            $ref: '#/definitions/Event'
+      operationId: app.create_event
+      tags:
+        - Events
+      responses:
+        200:
+          description: Confirmation message
+          schema:
+            $ref: '#/definitions/Message'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
 definitions:
   Event:
     type: object
