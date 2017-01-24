@@ -1,0 +1,10 @@
+{
+    "verbose": true,
+    "ignore": ["*.pyc", "build/*", ".git"],
+    "watch": [
+        "app.py"
+    ],
+    "execMap": {
+        "py": "python"
+    }
+}
